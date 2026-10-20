@@ -1,0 +1,25 @@
+{
+  "name": "HHMS Skin-Case Tracker",
+  "short_name": "HHMS",
+  "description": "A working HHMS dashboard for skin-as-organ-diagnostic cases: History, Habits, Mapping, Symptoms, logged daily and read in 90-day patterns. By Dr. Sohil Momin.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f3f3f3",
+  "theme_color": "#1f5c39",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
