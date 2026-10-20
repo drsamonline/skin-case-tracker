@@ -6,14 +6,14 @@
 
 A private, offline tracker for skin cases — built on the book's **HHMS dashboard**.
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Open_the_app-2e7d4f
+[![Live Demo](docs/badges/live-demo.svg)](https://drsamonline.github.io/skin-case-tracker/)
 
-[![License](https://img.shields.io/badge/license-free_to_use-2e7d4f
-[![Copyright](https://img.shields.io/badge/copyright-all_rights_reserved-a4262c
-[![PWA](https://img.shields.io/badge/PWA-installable_%26_offline-0078d4
-[![Privacy](https://img.shields.io/badge/data-stays_on_your_device-107c10
-[![Version](https://img.shields.io/badge/version-7.0-8a6a1f
-[![Author](https://img.shields.io/badge/by-Dr._Sohil_Momin-1f5c39
+[![License](docs/badges/license.svg)](#-licence)
+[![Copyright](docs/badges/copyright.svg)](#-licence)
+[![PWA](docs/badges/pwa.svg)](https://drsamonline.github.io/skin-case-tracker/)
+[![Privacy](docs/badges/privacy.svg)](#-privacy)
+[![Version](docs/badges/version.svg)](#)
+[![Author](docs/badges/author.svg)](https://github.com/drsamonline)
 
 <br>
 
