@@ -6,28 +6,22 @@
 
 A private, offline tracker for skin cases — built on the book's **HHMS dashboard**.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Open%20the%20app-2e7d4f
-[![License](https://img.shields.io/badge/License-Free%20to%20use-2e7d4f
-[![Copyright](https://img.shields.io/badge/Copyright-All%20rights%20reserved-a4262c
-[![PWA](https://img.shields.io/badge/PWA-Installable%20%26%20Offline-0078d4
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Open_the_app-2e7d4f
 
-[![Made with HTML5](https://img.shields.io/badge/Made%20with-HTML5%20%2B%20CSS%20%2B%20JS-e34f26
-[![No dependencies](https://img.shields.io/badge/dependencies-none-2e7d4f
-[![Data stays on device](https://img.shields.io/badge/data-stays%20on%20your%20device-107c10
+[![License](https://img.shields.io/badge/license-free_to_use-2e7d4f
+[![Copyright](https://img.shields.io/badge/copyright-all_rights_reserved-a4262c
+[![PWA](https://img.shields.io/badge/PWA-installable_%26_offline-0078d4
+[![Privacy](https://img.shields.io/badge/data-stays_on_your_device-107c10
 [![Version](https://img.shields.io/badge/version-7.0-8a6a1f
-[![Stars](https://img.shields.io/github/stars/drsamonline/skin-case-tracker
-[![Last commit](https://img.shields.io/github/last-commit/drsamonline/skin-case-tracker
-[![By Dr. Sohil Momin](https://img.shields.io/badge/by-Dr.%20Sohil%20Momin-1f5c39
+[![Author](https://img.shields.io/badge/by-Dr._Sohil_Momin-1f5c39
 
 <br>
 
 [![The HHMS Skin-Case Tracker dashboard](docs/screenshot.png)](https://drsamonline.github.io/skin-case-tracker/)
 
-### ▶&nbsp; [**Open the live app →**](https://drsamonline.github.io/skin-case-tracker/)
+### ▶ [**Open the live app →**](https://drsamonline.github.io/skin-case-tracker/)
 
 No install needed — it runs in the browser and installs as an offline app.
-
-<br>
 
 </div>
 
@@ -47,7 +41,7 @@ time and read as a *pattern*, not treated as a snapshot. This is that tracking i
 
 | | |
 |---|---|
-| 🌐 **Use it now** | Open **<https://drsamonline.github.io/skin-case-tracker/>** |
+| 🌐 **Use it now** | Open **https://drsamonline.github.io/skin-case-tracker/** |
 | 📲 **Install it** | Open the link, then use your browser's **Install** option (⊕ in the address bar, or *Add to Home screen*). It then works fully offline. |
 | 🧪 **Try sample data** | Press **Load demo case** on the Cases tab, or open the link with `#demo` on the end. |
 | 💾 **Run it locally** | Download the repo and open `index.html` — it is one self-contained file. |
