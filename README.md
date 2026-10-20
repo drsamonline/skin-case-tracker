@@ -1,27 +1,31 @@
 <div align="center">
 
-# HHMS Skin-Case Tracker
+<h1>HHMS Skin-Case Tracker</h1>
 
-**The companion app to the book _The Skin Is a Liar_ by Dr. Sohil Momin**
+<p><strong>The companion app to the book <em>The Skin Is a Liar</em> by Dr. Sohil Momin</strong></p>
 
-A private, offline tracker for skin cases — built on the book's **HHMS dashboard**.
+<p>A private, offline tracker for skin cases — built on the book's <strong>HHMS dashboard</strong>.</p>
 
-[![Live Demo](docs/badges/live-demo.svg)](https://drsamonline.github.io/skin-case-tracker/)
+<p>
+<a href="https://drsamonline.github.io/skin-case-tracker/"><img src="docs/badges/live-demo.svg" alt="Live demo — open the app"></a>
+</p>
 
-[![License](docs/badges/license.svg)](#-licence)
-[![Copyright](docs/badges/copyright.svg)](#-licence)
-[![PWA](docs/badges/pwa.svg)](https://drsamonline.github.io/skin-case-tracker/)
-[![Privacy](docs/badges/privacy.svg)](#-privacy)
-[![Version](docs/badges/version.svg)](#)
-[![Author](docs/badges/author.svg)](https://github.com/drsamonline)
+<p>
+<a href="#-licence"><img src="docs/badges/license.svg" alt="License: free to use"></a>
+<a href="#-licence"><img src="docs/badges/copyright.svg" alt="Copyright: all rights reserved"></a>
+<a href="https://drsamonline.github.io/skin-case-tracker/"><img src="docs/badges/pwa.svg" alt="PWA: installable and offline"></a>
+<a href="#-privacy"><img src="docs/badges/privacy.svg" alt="Privacy: data stays on your device"></a>
+<img src="docs/badges/version.svg" alt="Version 7.0">
+<a href="https://github.com/drsamonline"><img src="docs/badges/author.svg" alt="By Dr. Sohil Momin"></a>
+</p>
 
-<br>
+<p>
+<a href="https://drsamonline.github.io/skin-case-tracker/"><img src="docs/screenshot.png" alt="The HHMS Skin-Case Tracker dashboard" width="820"></a>
+</p>
 
-[![The HHMS Skin-Case Tracker dashboard](docs/screenshot.png)](https://drsamonline.github.io/skin-case-tracker/)
+<h3>▶ <a href="https://drsamonline.github.io/skin-case-tracker/">Open the live app →</a></h3>
 
-### ▶ [**Open the live app →**](https://drsamonline.github.io/skin-case-tracker/)
-
-No install needed — it runs in the browser and installs as an offline app.
+<p>No install needed — it runs in the browser and installs as an offline app.</p>
 
 </div>
 
@@ -110,12 +114,13 @@ here.
 _The Skin Is a Liar: Stop Treating the Surface_.
 
 <div align="center">
-<br>
 
-**[▶ Open the app](https://drsamonline.github.io/skin-case-tracker/)** &nbsp;·&nbsp;
-**[⭐ Star this repo](https://github.com/drsamonline/skin-case-tracker)** &nbsp;·&nbsp;
-**[Report an issue](https://github.com/drsamonline/skin-case-tracker/issues)**
+<p>
+<a href="https://drsamonline.github.io/skin-case-tracker/"><strong>▶ Open the app</strong></a> &nbsp;·&nbsp;
+<a href="https://github.com/drsamonline/skin-case-tracker"><strong>⭐ Star this repo</strong></a> &nbsp;·&nbsp;
+<a href="https://github.com/drsamonline/skin-case-tracker/issues"><strong>Report an issue</strong></a>
+</p>
 
-<sub>Made with care for clinicians and their patients.</sub>
+<p><sub>Made with care for clinicians and their patients.</sub></p>
 
 </div>
