@@ -26,7 +26,6 @@ The companion app to the book <em>The Skin Is a Liar</em> by Dr. Sohil Momin. It
 
 <div align="center">
 
-<h1>HHMS Skin-Case Tracker</h1>
 
 <p><strong>The companion app to the book <em>The Skin Is a Liar</em> by Dr. Sohil Momin</strong></p>
 
