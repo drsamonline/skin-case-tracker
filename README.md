@@ -2,28 +2,54 @@
 
 <h1>HHMS Skin-Case Tracker</h1>
 
+<p><strong>A private, offline browser app for tracking a skin case over time — History, Habits, Mapping and Symptoms, logged day by day and read as a 90-day pattern.</strong><br>
+The companion app to the book <em>The Skin Is a Liar</em> by Dr. Sohil Momin. It records; it does not diagnose.</p>
+
+<p>
+<a href="https://drsamonline.github.io/skin-case-tracker/"><img src="docs/badges/live-demo.svg" alt="Landing page"></a>
+<a href="https://drsamonline.github.io/skin-case-tracker/play/"><img src="docs/badges/pwa.svg" alt="PWA: installable and offline"></a>
+<a href="#-privacy"><img src="docs/badges/privacy.svg" alt="Privacy: data stays on your device"></a>
+<img src="docs/badges/version.svg" alt="Version 7.0">
+<a href="#-licence"><img src="docs/badges/license.svg" alt="License: free to use"></a>
+<a href="https://github.com/drsamonline"><img src="docs/badges/author.svg" alt="By Dr. Sohil Momin"></a>
+</p>
+
+<p>
+<a href="https://drsamonline.github.io/skin-case-tracker/"><strong>Landing page</strong></a> &nbsp;·&nbsp;
+<a href="https://drsamonline.github.io/skin-case-tracker/play/"><strong>Open the live app</strong></a> &nbsp;·&nbsp;
+<a href="https://github.com/drsamonline/skin-case-tracker"><strong>Star this repo</strong></a>
+</p>
+
+</div>
+
+---
+
+<div align="center">
+
+<h1>HHMS Skin-Case Tracker</h1>
+
 <p><strong>The companion app to the book <em>The Skin Is a Liar</em> by Dr. Sohil Momin</strong></p>
 
 <p>A private, offline tracker for skin cases — built on the book's <strong>HHMS dashboard</strong>.</p>
 
 <p>
-<a href="https://drsamonline.github.io/skin-case-tracker/"><img src="docs/badges/live-demo.svg" alt="Live demo — open the app"></a>
+<a href="https://drsamonline.github.io/skin-case-tracker/play/"><img src="docs/badges/live-demo.svg" alt="Live demo — open the app"></a>
 </p>
 
 <p>
 <a href="#-licence"><img src="docs/badges/license.svg" alt="License: free to use"></a>
 <a href="#-licence"><img src="docs/badges/copyright.svg" alt="Copyright: all rights reserved"></a>
-<a href="https://drsamonline.github.io/skin-case-tracker/"><img src="docs/badges/pwa.svg" alt="PWA: installable and offline"></a>
+<a href="https://drsamonline.github.io/skin-case-tracker/play/"><img src="docs/badges/pwa.svg" alt="PWA: installable and offline"></a>
 <a href="#-privacy"><img src="docs/badges/privacy.svg" alt="Privacy: data stays on your device"></a>
 <img src="docs/badges/version.svg" alt="Version 7.0">
 <a href="https://github.com/drsamonline"><img src="docs/badges/author.svg" alt="By Dr. Sohil Momin"></a>
 </p>
 
 <p>
-<a href="https://drsamonline.github.io/skin-case-tracker/"><img src="docs/screenshot.png" alt="The HHMS Skin-Case Tracker dashboard" width="820"></a>
+<a href="https://drsamonline.github.io/skin-case-tracker/play/"><img src="docs/screenshot.png" alt="The HHMS Skin-Case Tracker dashboard" width="820"></a>
 </p>
 
-<h3>▶ <a href="https://drsamonline.github.io/skin-case-tracker/">Open the live app →</a></h3>
+<h3>▶ <a href="https://drsamonline.github.io/skin-case-tracker/play/">Open the live app →</a></h3>
 
 <p>No install needed — it runs in the browser and installs as an offline app.</p>
 
@@ -45,7 +71,7 @@ time and read as a *pattern*, not treated as a snapshot. This is that tracking i
 
 | | |
 |---|---|
-| 🌐 **Use it now** | Open **https://drsamonline.github.io/skin-case-tracker/** |
+| 🌐 **Use it now** | Open **https://drsamonline.github.io/skin-case-tracker/play/** |
 | 📲 **Install it** | Open the link, then use your browser's **Install** option (⊕ in the address bar, or *Add to Home screen*). It then works fully offline. |
 | 🧪 **Try sample data** | Press **Load demo case** on the Cases tab, or open the link with `#demo` on the end. |
 | 💾 **Run it locally** | Download the repo and open `index.html` — it is one self-contained file. |
@@ -116,8 +142,8 @@ _The Skin Is a Liar: Stop Treating the Surface_.
 <div align="center">
 
 <p>
-<a href="https://drsamonline.github.io/skin-case-tracker/"><strong>▶ Open the app</strong></a> &nbsp;·&nbsp;
-<a href="https://github.com/drsamonline/skin-case-tracker"><strong>⭐ Star this repo</strong></a> &nbsp;·&nbsp;
+<a href="https://drsamonline.github.io/skin-case-tracker/play/"><strong>▶ Open the app</strong></a> &nbsp;·&nbsp;
+<a href="https://github.com/drsamonline/skin-case-tracker"><strong>Star this repo</strong></a> &nbsp;·&nbsp;
 <a href="https://github.com/drsamonline/skin-case-tracker/issues"><strong>Report an issue</strong></a>
 </p>
 

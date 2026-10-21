@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HHMS Skin-Case Tracker — Dr. Sohil Momin</title>
+<meta name="theme-color" content="#1f5c39">
+<meta name="description" content="The HHMS dashboard from The Skin Is a Liar, as a working app: History, Habits, Mapping, Symptoms — logged daily, read as a 90-day pattern, audited at 30/60/90 days. By Dr. Sohil Momin.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg">
+<style>
+:root{
+ --bg:#f3f3f3; --pane:#fff; --pane2:#fafafa; --line:#e6e6e6; --line2:#d1d1d1;
+ --ink:#1b1b1b; --soft:#5f6b63; --faint:#8a938c;
+ --accent:#2e7d4f; --accent-d:#1f5c39; --accent-l:#e8f3ec; --accent-b:#cfe3d7;
+ --green:#107c10; --red:#a4262c; --amber:#8a6a1f; --blue:#0078d4;
+ --sans:'Segoe UI','Segoe UI Web (West European)',-apple-system,BlinkMacSystemFont,Roboto,'Helvetica Neue',Arial,sans-serif;
+ --sh:0 1px 2px rgba(0,0,0,.06);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-weight:600}
+a{color:var(--accent-d)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.titlebar{background:var(--accent-d);color:#fff;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 0 0 14px;user-select:none}
+.tb-left{display:flex;align-items:center;gap:12px;min-width:0}
+.tb-left svg{width:26px;height:26px;flex:none}
+.appname{font-size:14px;font-weight:600}
+.tbsub{font-size:12px;color:#cfe3d7;border-left:1px solid #3d7a5a;padding-left:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.winbtns{display:flex}
+.winbtn{width:46px;height:48px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#eaf3ee;cursor:default}
+.winbtn.close:hover{background:#e81123;color:#fff}
+.cmdbar{background:var(--pane);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.tabs{display:flex;overflow-x:auto}
+.tabs button{background:none;border:none;border-bottom:2px solid transparent;color:var(--soft);font-family:var(--sans);font-size:13.5px;padding:12px 16px;cursor:pointer;white-space:nowrap}
+.tabs button:hover{color:var(--ink);background:var(--pane2)}
+.tabs button.on{color:var(--accent-d);border-bottom-color:var(--accent);font-weight:600}
+.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.toolbar{background:var(--pane);border-bottom:1px solid var(--line);padding:9px 0}
+.toolbar .wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ctl{font-size:12px;color:var(--soft)}
+.spacer{flex:1}
+select,input[type=text],input[type=number],input[type=date],input[type=time],input[type=search],textarea{background:#fff;border:1px solid var(--line2);border-radius:0;padding:7px 9px;font-family:var(--sans);font-size:13.5px;color:var(--ink);width:100%}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:inset 0 -2px 0 var(--accent)}
+textarea{min-height:80px;resize:vertical}
+.btn{background:var(--pane);border:1px solid var(--line2);border-radius:0;padding:8px 16px;font-family:var(--sans);font-size:13.5px;color:var(--ink);cursor:pointer}
+.btn:hover{background:#f0f0f0;border-color:#b8b8b8}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-d);border-color:var(--accent-d)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--accent-d);padding:6px 8px}
+.btn.ghost:hover{background:var(--accent-l)}
+.btn.sm{padding:4px 9px;font-size:12px}
+.btn.gold{background:#a98b4a;border-color:#a98b4a;color:#fff}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+main{padding:20px 0 80px}
+.card{background:var(--pane);border:1px solid var(--line);border-radius:0;padding:18px 20px;margin:14px 0;box-shadow:var(--sh)}
+.card h2{margin:0 0 4px;font-size:20px;color:var(--accent-d)}
+.card h3{margin:18px 0 8px;font-size:13px;color:var(--accent-d);text-transform:uppercase;letter-spacing:.06em}
+.card .note{color:var(--soft);font-size:13.5px;margin:0 0 12px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.tile{background:var(--accent);color:#fff;padding:14px 16px;border:1px solid var(--accent-d)}
+.tile.alt{background:var(--pane);color:var(--ink);border:1px solid var(--line)}
+.tile .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.85}
+.tile .v{font-size:28px;font-weight:600;line-height:1.1;margin-top:2px}
+.tile .d{font-size:12px;opacity:.85}
+.hero{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center}
+@media(max-width:640px){.hero{grid-template-columns:1fr}}
+label.f{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--soft);margin:12px 0 5px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-block;font-size:11px;padding:2px 9px;background:var(--pane2);border:1px solid var(--line2);color:var(--soft)}
+.pill.red{background:#f7e3e3;border-color:#e6c3c3;color:var(--red)}
+.pill.amber{background:#f7edd7;border-color:#e6d5ac;color:var(--amber)}
+.pill.blue{background:#e2ecf5;border-color:#c3d6e6;color:var(--blue)}
+.pill.green{background:#e3efe6;border-color:#c3ddca;color:var(--green)}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+table.t th,table.t td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+table.t th{color:var(--soft);font-weight:600;text-transform:uppercase;font-size:10.5px;letter-spacing:.06em;background:var(--pane2)}
+.slider{display:flex;align-items:center;gap:12px;margin:7px 0}
+.slider input[type=range]{flex:1;accent-color:var(--accent)}
+.slider .val{font-weight:600;min-width:28px;text-align:right}
+.chk{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.chk input{width:auto;accent-color:var(--accent)}
+.muted{color:var(--soft);font-size:13px}
+.faint{color:var(--faint);font-size:12px}
+.empty{text-align:center;color:var(--soft);padding:32px 12px}
+details{border:1px solid var(--line);padding:12px 14px;margin:10px 0;background:var(--pane2)}
+summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--accent-d)}
+.warn{background:#fdf3e3;border:1px solid #e6d5ac;padding:11px 13px;font-size:13.5px;color:#6b521a}
+.danger{background:#fbe9e9;border:1px solid #e0b3b3;padding:12px 14px;font-size:13.5px;color:#7a1c1c}
+.info{background:var(--accent-l);border:1px solid var(--accent-b);padding:11px 13px;font-size:13.5px;color:#204a33}
+.bodywrap{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+.bodywrap svg{width:230px;height:auto;background:var(--pane2);border:1px solid var(--line)}
+.hot{cursor:pointer}
+.legend{font-size:12px;color:var(--soft)}
+.tag{display:inline-block;width:11px;height:11px;vertical-align:middle;margin-right:5px;border:1px solid rgba(0,0,0,.15)}
+.chart{width:100%;height:auto;display:block}
+.chartwrap{position:relative}
+.tip{position:absolute;pointer-events:none;background:#1b1b1b;color:#fff;padding:7px 10px;font-size:12px;line-height:1.45;opacity:0;transition:opacity .1s;z-index:5;white-space:nowrap}
+.legendrow{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--soft);margin-top:6px}
+.legendrow span{display:inline-flex;align-items:center;gap:6px;cursor:pointer;padding:2px 4px}
+.legendrow span:hover{background:var(--accent-l)}
+.legendrow span.off{opacity:.35;text-decoration:line-through}
+.legendrow i{width:16px;height:4px;display:inline-block}
+.axisrow{margin:12px 0;cursor:pointer}
+.axisrow .hd{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.axisrow .nm{font-weight:600;color:var(--accent-d)}
+.bar{height:12px;background:var(--pane2);border:1px solid var(--line2);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent);transition:width .5s}
+.heat{display:grid;gap:2px;font-size:10px;width:100%}
+.heat .cell{min-height:36px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;cursor:default;font-size:10px}
+.heat .hcell{color:var(--soft);font-size:9.5px;display:flex;align-items:flex-end;justify-content:center;text-align:center;padding-bottom:3px}
+.ringwrap{position:relative;width:160px;height:160px}
+.ringwrap .mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ringwrap .mid b{font-size:32px;color:var(--accent-d);line-height:1}
+.ringwrap .mid span{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint)}
+.kbd{font-size:12px;background:var(--pane2);border:1px solid var(--line2);padding:1px 6px}
+.flow{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch}
+.flow .n{flex:1;min-width:140px;background:var(--pane2);border:1px solid var(--line);padding:11px 13px;cursor:pointer}
+.flow .n:hover{background:var(--accent-l);border-color:var(--accent-b)}
+.flow .n b{display:block;color:var(--accent-d);font-size:12.5px}
+.flow .n span{font-size:13px;color:var(--soft)}
+.foot{max-width:1180px;margin:0 auto;padding:0 20px 30px;color:var(--soft);font-size:11.5px;line-height:1.6}
+.sig{font-style:italic;color:var(--accent-d)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.photo{border:1px solid var(--line);background:var(--pane2);position:relative}
+.photo img{width:100%;height:130px;object-fit:cover;display:block}
+.photo .meta{padding:6px 8px;font-size:11.5px;color:var(--soft)}
+.photo .x{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;border:none;width:22px;height:22px;cursor:pointer}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .14s}
+.overlay.on{opacity:1;pointer-events:auto}
+.modal{background:var(--pane);border:1px solid var(--line2);padding:22px;width:min(460px,92vw);max-height:88vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.modal h3{margin:0 0 8px;font-size:18px;color:var(--accent-d)}
+.modal p{margin:0 0 12px;color:var(--soft);font-size:13.5px}
+.modal .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(14px);background:#1b1b1b;color:#fff;padding:11px 18px;font-size:13px;opacity:0;transition:.2s;z-index:120;pointer-events:none;display:flex;gap:14px;align-items:center}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+.toastbtn{background:none;border:none;color:#8fe0b0;font-weight:600;cursor:pointer;font-size:13px}
+#tour{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:130;opacity:0;pointer-events:none;transition:.15s}
+#tour.on{opacity:1;pointer-events:auto}
+.tourcard{background:var(--pane);border:1px solid var(--line2);padding:24px;width:min(520px,92vw);box-shadow:0 10px 40px rgba(0,0,0,.35)}
+.tourcard h3{margin:0 0 6px;color:var(--accent-d)}
+.tourcard .step{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint)}
+.printhead{display:none}
+@media print{
+ .titlebar,.cmdbar,.toolbar,.foot,.noprint,#toast,.overlay,#tour{display:none!important}
+ body{background:#fff}
+ .card{box-shadow:none;border-color:#bbb;break-inside:avoid;margin:8px 0}
+ .printhead{display:block;border-bottom:2px solid #000;margin-bottom:10px;padding-bottom:6px}
+ .chartwrap{break-inside:avoid}
+ .tile{background:#eee;color:#000;border-color:#bbb}
+}
+</style>
+</head>
+<body>
+<header class="titlebar">
+  <div class="tb-left">
+    <svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" fill="#1f5c39"/><rect x="6" y="6" width="88" height="88" fill="none" stroke="#cfe3d7" stroke-width="2"/><circle cx="50" cy="50" r="26" fill="none" stroke="#cfe3d7" stroke-width="2" opacity=".7"/><circle cx="50" cy="50" r="11" fill="#cfe3d7"/><circle cx="50" cy="22" r="4" fill="#cfe3d7"/><g fill="#eaf3ee"><rect x="70" y="46" width="7" height="7"/><rect x="80" y="46" width="7" height="7"/><rect x="23" y="46" width="7" height="7"/><rect x="50" y="79" width="7" height="7"/></g></svg>
+    <span class="appname">HHMS Skin-Case Tracker</span>
+    <span class="tbsub">History · Habits · Mapping · Symptoms — Dr. Sohil Momin</span>
+  </div>
+  <div class="winbtns" aria-hidden="true"><span class="winbtn">&#8211;</span><span class="winbtn">&#9744;</span><span class="winbtn close">&#10005;</span></div>
+</header>
+<nav class="cmdbar"><div class="wrap"><div class="tabs" id="tabs" role="tablist"></div></div></nav>
+<div class="toolbar"><div class="wrap">
+  <span class="ctl">Case</span>
+  <select id="caseSel" style="width:auto;max-width:340px" onchange="selectCase(this.value)" aria-label="Select case"></select>
+  <button class="btn primary" onclick="newCase()">+ New case</button>
+  <span class="spacer"></span>
+  <label class="chk" title="Best-effort reminder while the app is open"><input type="checkbox" id="remChk" onchange="toggleReminders(this.checked)"> Daily reminder</label>
+  <button class="btn" onclick="startTour(0)">Guide tour</button>
+</div></div>
+<main class="wrap" id="view"></main>
+<div class="foot">
+  <p><b>The HHMS Skin-Case Tracker</b> is a working implementation of the HHMS dashboard in <i>The Skin Is a Liar</i> (Dr. Sohil Momin, MATNEO, 2026), chapters 11 and 14. It records History, Habits, Mapping and Symptoms, reads them as a 90-day pattern, and runs the 30/60/90-day audit loop.</p>
+  <p><b>It records; it does not diagnose.</b> Nothing here is medical advice. The reading of the pattern is the clinician's job. All data stays in this browser and never leaves your device.</p>
+</div>
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()"><div class="modal" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+<div id="tour"><div class="tourcard" id="tourBox"></div></div>
+<script>
+/* =====================================================================
+   HHMS Skin-Case Tracker — single-file app (Win10 square theme)
+   Implements the HHMS dashboard of "The Skin Is a Liar" (Ch. 11 & 14).
+   Author of the method: Dr. Sohil Momin, BHMS (MATNEO, 2026).
+   ===================================================================== */
+const AUTHOR='Dr. Sohil Momin, BHMS', BRAND='MATNEO', BOOK='The Skin Is a Liar', YEAR='2026';
+const LS='hhms.v3', LSOLD='hhms.v2', LSOLD2='hhms.v1', SCHEMA=3;
+
+const AXES=[
+ {id:'liver',name:'Liver-Skin Axis',organ:'Liver',sig:'Skin flares after heavy food or alcohol; breathing worsens when the skin clears; sternal patch present.'},
+ {id:'spleen',name:'Spleen-Lymph-Skin Axis',organ:'Spleen / lymphatic system',sig:'Chronic glandular swelling; family history of tuberculosis; ringworm or lupus resisting topical treatment.'},
+ {id:'heart',name:'Heart-Skin Axis',organ:'Heart',sig:'Skin flares with stress; cardiac symptoms worsen when the skin clears; history of a suppressed arm or chest eruption.'},
+ {id:'lung',name:'Lung-Skin Axis',organ:'Lung',sig:'Skin flares with cold air; asthma worsens when the skin clears; history of a suppressed childhood eruption.'},
+ {id:'eye',name:'Eye-Skin Axis',organ:'Eye',sig:'Eruption on scalp or face; visual symptoms follow a skin "cure"; history of ointment applied to the scalp.'},
+ {id:'gutbrain',name:'Gut-Brain-Skin Axis',organ:'Gut and brain',sig:'Skin flares with dietary indiscretion; gut symptoms precede skin flares; neurological symptoms follow the gut symptoms.'},
+ {id:'pelvis',name:'Pelvis-Skin Axis',organ:'Pelvis / ovary',sig:'Skin flares before or during menstruation; pelvic pain trades with the skin; skin refractory to topical treatment.'}
+];
+const REGIONS=[
+ {id:'scalp',name:'Scalp',x:150,y:44},{id:'face',name:'Face',x:150,y:74},{id:'chin',name:'Chin',x:150,y:96},
+ {id:'neck',name:'Neck',x:150,y:114},{id:'sternum',name:'Sternum / chest',x:150,y:178},{id:'abdomen',name:'Abdomen',x:150,y:246},
+ {id:'arms',name:'Bends of arms (left)',x:96,y:210},{id:'arms2',name:'Bends of arms (right)',x:204,y:210},
+ {id:'hands',name:'Hands (left)',x:62,y:306},{id:'hands2',name:'Hands (right)',x:238,y:306},
+ {id:'back',name:'Back',x:274,y:190},{id:'pelvis',name:'Pelvis / groin',x:150,y:312},
+ {id:'legs',name:'Bends of legs (left)',x:128,y:410},{id:'legs2',name:'Bends of legs (right)',x:172,y:410},
+ {id:'feet',name:'Feet (left)',x:126,y:566},{id:'feet2',name:'Feet (right)',x:174,y:566}
+];
+const SST=[{c:'#d9d3c2',n:'none'},{c:'#a4262c',n:'present'},{c:'#c2680a',n:'has been'},{c:'#0078d4',n:'migrated'}];
+const SYMPTOMS=[['cardiac','Cardiac (palpitation, irregularity, chest)'],['respiratory','Respiratory (breathlessness, asthma, cough)'],
+ ['digestive','Digestive (dyspepsia, flatulence, bowel)'],['neurological','Neurological (headache, mood, sleep, seizures)'],
+ ['gynaecological','Gynaecological (pelvic pain, cycle)']];
+const HEAT_KEYS=[['skin','Skin'],['respiratory','Resp'],['cardiac','Card'],['digestive','Dig'],['neurological','Neuro'],['gynaecological','Gyn']];
+const REDWORDS=[[/\bseizure\b|\bconvulsion\b|\bfit\b/,'a seizure'],[/\bvision loss\b|\bblind(ness)?\b/,'loss of vision'],[/\bchest pain\b/,'chest pain'],[/cannot breathe|can't breathe/,'severe breathlessness'],[/\bunconscious\b/,'loss of consciousness'],[/\bfaint(ing|ed)?\b/,'fainting'],[/bulging fontanelle/,'a bulging fontanelle']];
+
+/* ---- helpers ---- */
+const uid=()=>Math.random().toString(36).slice(2,9);
+const ISO_RE=/^\d{4}-\d{2}-\d{2}$/;
+function isoLocal(dt){return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');}
+function dayISO(offset){const d=new Date();d.setDate(d.getDate()+offset);return isoLocal(d);}
+const todayISO=()=>isoLocal(new Date());
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const active=()=>STATE.cases.find(c=>c.id===STATE.activeId)||null;
+function dayIndex(startISO){if(!startISO)return 1;const a=new Date(startISO+'T00:00:00'),b=new Date(todayISO()+'T00:00:00');return Math.max(1,Math.floor((b-a)/86400000)+1);}
+function fmt(d){if(!d||!ISO_RE.test(d))return '—';const x=new Date(d+'T00:00:00');if(isNaN(x.getTime()))return '—';return x.toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});}
+function shortD(d){if(!d||!ISO_RE.test(d))return '';const x=new Date(d+'T00:00:00');if(isNaN(x.getTime()))return '';return x.toLocaleDateString(undefined,{day:'numeric',month:'short'});}
+function monthsBetween(a,b){if(!a||!b)return null;const x=new Date(a),y=new Date(b);let m=(y.getFullYear()-x.getFullYear())*12+(y.getMonth()-x.getMonth());if(y.getDate()<x.getDate())m--;return m;}
+function pearson(xs,ys){if(!xs||!ys)return 0;const n=Math.min(xs.length,ys.length);if(n<3)return 0;const mx=xs.slice(0,n).reduce((a,b)=>a+b,0)/n,my=ys.slice(0,n).reduce((a,b)=>a+b,0)/n;let num=0,dx=0,dy=0;for(let i=0;i<n;i++){const a=xs[i]-mx,b=ys[i]-my;num+=a*b;dx+=a*a;dy+=b*b;}if(dx===0||dy===0)return 0;return num/Math.sqrt(dx*dy);}
+const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+function streak(c){const dset=new Set(c.logs.map(l=>l.date));let s=0,i=dset.has(todayISO())?0:1;while(dset.has(dayISO(-i))){s++;i++;}return s;}
+function missedDays(c,days){days=days||10;const dset=new Set(c.logs.map(l=>l.date));const out=[];for(let i=1;i<=days;i++){const iso=dayISO(-i);if(iso>=c.start&&!dset.has(iso))out.push(iso);}return out;}
+
+/* ---- in-app dialogs ---- */
+let MODAL_OK=null;
+function closeModal(){document.getElementById('overlay').classList.remove('on');MODAL_OK=null;}
+function toast(msg){const t=document.getElementById('toast');t.innerHTML=esc(msg);t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),2600);}
+function toastAction(msg,label,cb){const t=document.getElementById('toast');t.innerHTML=esc(msg)+' <button class="toastbtn" id="toastAct">'+esc(label)+'</button>';t.classList.add('on');clearTimeout(t._h);const b=document.getElementById('toastAct');b.onclick=()=>{t.classList.remove('on');clearTimeout(t._h);cb();};t._h=setTimeout(()=>t.classList.remove('on'),7000);}
+function askText(title,ph,val,cb){MODAL_OK=cb;const box=document.getElementById('modalBox');
+  box.innerHTML='<h3>'+esc(title)+'</h3><input type="text" id="modalInput" value="'+esc(val||'')+'" placeholder="'+esc(ph||'')+'">'+
+    '<div class="actions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" id="modalOk">OK</button></div>';
+  document.getElementById('overlay').classList.add('on');const inp=document.getElementById('modalInput');inp.focus();inp.select();
+  const ok=()=>{const v=inp.value;const f=MODAL_OK;closeModal();if(f)f(v);};
+  document.getElementById('modalOk').onclick=ok;inp.onkeydown=e=>{if(e.key==='Enter')ok();if(e.key==='Escape')closeModal();};}
+function askConfirm(title,msg,cb,label){MODAL_OK=cb;const box=document.getElementById('modalBox');
+  box.innerHTML='<h3>'+esc(title)+'</h3><p>'+esc(msg)+'</p><div class="actions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" id="modalOk">'+esc(label||'Delete')+'</button></div>';
+  document.getElementById('overlay').classList.add('on');document.getElementById('modalOk').onclick=()=>{const f=MODAL_OK;closeModal();if(f)f();};}
+function showModal(html){document.getElementById('modalBox').innerHTML=html+'<div class="actions"><button class="btn primary" onclick="closeModal()">Close</button></div>';document.getElementById('overlay').classList.add('on');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();document.getElementById('tour').classList.remove('on');}});
+
+/* ---- state ---- */
+let STATE={schema:SCHEMA,cases:[],activeId:null,settings:{reminders:false,tour:false}}, TAB='dashboard', LOGDATE=todayISO();
+let _saveT=null;
+function save(){if(_saveT)clearTimeout(_saveT);_saveT=setTimeout(saveNow,300);}
+let _quotaWarned=false;
+function saveNow(){if(_saveT){clearTimeout(_saveT);_saveT=null;}try{localStorage.setItem(LS,JSON.stringify(STATE))}catch(e){console.warn(e);if(!_quotaWarned){_quotaWarned=true;try{toast('Storage full — export your data to free space');}catch(_){}}}}
+window.addEventListener('beforeunload',saveNow);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveNow();});
+function safeId(id,seen){if(typeof id!=='string'||!/^[A-Za-z0-9_-]{1,40}$/.test(id)||seen.has(id))id=uid();seen.add(id);return id;}
+function migrate(s){
+  if(!s||typeof s!=='object')s={};
+  s.schema=s.schema||1;
+  s.settings=(s.settings&&typeof s.settings==='object')?s.settings:{reminders:false,tour:false};
+  if(typeof s.settings.reminders!=='boolean')s.settings.reminders=false;
+  if(typeof s.settings.tour!=='boolean')s.settings.tour=false;
+  if(!Array.isArray(s.cases))s.cases=[];
+  const seen=new Set();
+  s.cases=s.cases.filter(c=>c&&typeof c==='object').map(c=>{
+    c.id=safeId(c.id,seen);
+    if(typeof c.name!=='string'||!c.name)c.name='New case';
+    if(!ISO_RE.test(c.start||''))c.start=todayISO();
+    if(!ISO_RE.test(c.created||''))c.created=c.start;
+    c.history=(c.history&&typeof c.history==='object')?c.history:{narrative:'',events:[]};
+    if(typeof c.history.narrative!=='string')c.history.narrative='';
+    if(!Array.isArray(c.history.events))c.history.events=[];
+    c.history.events=c.history.events.filter(e=>e&&typeof e==='object');
+    c.bodyMap=(c.bodyMap&&typeof c.bodyMap==='object')?c.bodyMap:{};
+    c.axisHypothesis=(c.axisHypothesis&&typeof c.axisHypothesis==='object')?c.axisHypothesis:{axis:'',notes:''};
+    c.plan=(c.plan&&typeof c.plan==='object')?c.plan:{};
+    c.meta=(c.meta&&typeof c.meta==='object')?c.meta:{sex:'',age:'',refractory:false};
+    c.logs=Array.isArray(c.logs)?c.logs.filter(l=>l&&typeof l==='object'&&ISO_RE.test(l.date||'')):[];
+    c.flares=Array.isArray(c.flares)?c.flares.filter(f=>f&&typeof f==='object'):[];
+    c.photos=Array.isArray(c.photos)?c.photos.filter(p=>p&&typeof p==='object'&&typeof p.data==='string'&&p.data.indexOf('data:image')===0):[];
+    c.reviews=(c.reviews&&typeof c.reviews==='object')?c.reviews:{};
+    return c;
+  });
+  if(s.activeId&&!s.cases.some(c=>c.id===s.activeId))s.activeId=s.cases[0]?s.cases[0].id:null;
+  s.schema=SCHEMA;return s;
+}
+function load(){try{const s=localStorage.getItem(LS);if(s){STATE=migrate(JSON.parse(s));return;}
+  const o=localStorage.getItem(LSOLD)||localStorage.getItem(LSOLD2);if(o){STATE=migrate(JSON.parse(o));save();}}catch(e){}}
+
+/* ============================== case model ============================== */
+function blankCase(name){return {id:uid(),name:name||'New case',created:todayISO(),start:todayISO(),
+  history:{narrative:'',events:[]},bodyMap:{},axisHypothesis:{axis:'',notes:''},
+  plan:{remedy:'',potency:'',frequency:'',timeline:''},logs:[],flares:[],reviews:{},photos:[],
+  meta:{sex:'',age:'',refractory:false}};}
+function newCase(){askText('New case','Case name or initials','',name=>{
+  const c=blankCase((name||'').trim()||'New case');STATE.cases.push(c);STATE.activeId=c.id;save();TAB='intake';render();toast('Case created — complete the intake');});}
+function selectCase(id){if(!STATE.cases.some(c=>c.id===id))return;STATE.activeId=id;save();render();}
+function delCase(id){const c=STATE.cases.find(x=>x.id===id);if(!c)return;askConfirm('Delete case','Delete "'+(c?c.name:'this case')+'" and all its logs? This cannot be undone.',()=>{
+  const idx=STATE.cases.findIndex(x=>x.id===id);const removed=STATE.cases.splice(idx,1)[0];
+  if(STATE.activeId===id)STATE.activeId=STATE.cases[0]?STATE.cases[0].id:null;save();render();
+  toastAction('Case deleted','Undo',()=>{STATE.cases.splice(idx,0,removed);STATE.activeId=removed.id;save();render();toast('Restored');});});}
+function seedDemo(){
+  const c=blankCase('Demo — M. (psoriasis + asthma)');
+  c.start=dayISO(-44);
+  c.meta={sex:'F',age:'34',refractory:false};
+  c.history.narrative='Childhood eczema of the bends of the arms, "cured" with an ointment in her teens. Psoriasis on the elbows and scalp since her twenties. Asthma began a few years after the skin cleared. The skin and the breathing have traded the load ever since.';
+  c.history.events=[{eruption:'Eczema, bends of arms',agent:'Topical ointment',dateCured:'2009-06-01',complaint:'Asthma',onset:'2012-03-01'}];
+  c.bodyMap={scalp:1,arms:1,sternum:2};
+  c.axisHypothesis={axis:'lung',notes:'Inverse covariation between the skin and the breathing.'};
+  c.plan={remedy:'(reported in the book, not prescribed here)',potency:'—',frequency:'infrequent',timeline:'eruption to return over 4–8 weeks'};
+  for(let i=44;i>=0;i--){const d=dayISO(-i);
+    const skin=Math.round(4.5+3*Math.sin(i/5.5)+(i%7===0?1:0));
+    const resp=Math.round(6.5-3*Math.sin(i/5.5));
+    const card=Math.round(1+(i%9===0?1:0));
+    c.logs.push({date:d,skin:Math.max(0,Math.min(10,skin)),loc:'elbows, scalp',
+      habits:{stress:3,coldDrinks:(i%6===0?1:0),alcohol:0,sleep:7,heavyFood:(i%5===0),menstruating:(i%28<5),medications:'',vaccination:''},
+      symptoms:{cardiac:Math.max(0,card),respiratory:Math.max(0,Math.min(10,resp)),digestive:2,neurological:1,gynaecological:2},notes:''});
+  }
+  for(let i=0;i<4;i++){const d=dayISO(-(i*9+2));
+    c.flares.push({date:d,time:'morning',severity:7,food48:'dairy, fried food',cycle:i%2?'before period':'during period',stress:6,sleep:5.5,internal:'breathlessness'});}
+  c.reviews={30:{yes:true,notes:'Pattern emerged by day 30: inverse covariation between skin and breathing.'}};
+  STATE.cases.push(c);STATE.activeId=c.id;save();}
+
+/* ============================== tabs ============================== */
+const TABS=[['dashboard','Dashboard'],['cases','Cases'],['intake','Intake (SOP)'],['log','Daily Log'],['flare','Flare Log'],['pattern','Pattern & Conclusions'],['reviews','30/60/90 Review'],['guide','Guide'],['export','Data & Export']];
+function renderTabs(){document.getElementById('tabs').innerHTML=TABS.map(([id,l])=>`<button role="tab" aria-selected="${TAB===id}" class="${TAB===id?'on':''}" onclick="setTab('${id}')">${l}</button>`).join('');}
+function setTab(id){TAB=id;HIDDEN.clear();render();window.scrollTo({top:0,behavior:'smooth'});}
+function render(){
+  try{
+    renderTabs();
+    const sel=document.getElementById('caseSel');
+    sel.innerHTML=STATE.cases.length?STATE.cases.map(c=>`<option value="${c.id}" ${c.id===STATE.activeId?'selected':''}>${esc(c.name)} · day ${dayIndex(c.start)}</option>`).join(''):'<option>No case</option>';
+    const rc=document.getElementById('remChk');if(rc)rc.checked=!!STATE.settings.reminders;
+    const v=document.getElementById('view');const c=active();
+    if(TAB==='cases')v.innerHTML=viewCases();
+    else if(TAB==='guide')v.innerHTML=viewGuide();
+    else if(!c)v.innerHTML=`<div class="card"><div class="empty">No case selected yet.<br><br><button class="btn primary" onclick="newCase()">Create a case</button> <button class="btn" onclick="loadDemo()">Load the demo case</button></div></div>`;
+    else if(TAB==='dashboard')v.innerHTML=viewDashboard(c);
+    else if(TAB==='intake')v.innerHTML=viewIntake(c);
+    else if(TAB==='log')v.innerHTML=viewLog(c);
+    else if(TAB==='flare')v.innerHTML=viewFlare(c);
+    else if(TAB==='pattern')v.innerHTML=viewPattern(c);
+    else if(TAB==='reviews')v.innerHTML=viewReviews(c);
+    else if(TAB==='export')v.innerHTML=viewExport(c);
+    else v.innerHTML=viewDashboard(c);
+    mountCharts();
+  }catch(err){
+    console.error(err);
+    const v=document.getElementById('view');
+    if(v)v.innerHTML=`<div class="card"><h2>Something went wrong</h2><p class="note">${esc(err&&err.message||String(err))}</p><div class="row"><button class="btn primary" onclick="location.reload()">Reload</button><button class="btn" onclick="TAB='dashboard';render()">Go to dashboard</button></div></div>`;
+  }
+}
+function loadDemo(){seedDemo();TAB='pattern';render();}
+function toggleReminders(on){STATE.settings.reminders=on;saveNow();
+  if(on&&'Notification' in window){if(Notification.permission==='default')Notification.requestPermission().then(maybeNotify).catch(()=>{});else maybeNotify();toast('Reminder on — shown while the app is open');}
+  else if(!on)toast('Reminder off');}
+function maybeNotify(){try{if(!STATE.settings.reminders)return;if(!('Notification' in window)||Notification.permission!=='granted')return;const c=active();if(!c)return;const last=c.logs.length?[...c.logs].sort((a,b)=>b.date.localeCompare(a.date))[0].date:null;if(last!==todayISO())new Notification('HHMS Skin-Case Tracker',{body:"Today's entry is not logged yet — keep the streak going."});}catch(e){}}
+
+/* ============================== charts ============================== */
+const HIDDEN=new Set();
+function toggleSeries(name){if(HIDDEN.has(name))HIDDEN.delete(name);else HIDDEN.add(name);render();}
+function legendHTML(series){return series.map(s=>`<span class="${HIDDEN.has(s.name)?'off':''}" data-n="${esc(s.name)}" onclick="toggleSeries(this.dataset.n)"><i style="background:${s.color}"></i>${esc(s.name)}</span>`).join('');}
+function lineChart(series,labels,opts){opts=opts||{};const W=680,H=opts.h||250,PL=38,PR=16,PT=16,PB=34;
+  const pw=W-PL-PR,ph=H-PT-PB,n=Math.max(1,labels.length);
+  const X=i=>PL+(n<=1?pw/2:i*pw/(n-1)), Y=v=>PT+ph-(Math.max(0,Math.min(10,v))/10)*ph;
+  let g='';
+  for(let v=0;v<=10;v+=2){const yy=Y(v);g+=`<line x1="${PL}" y1="${yy}" x2="${W-PR}" y2="${yy}" stroke="#eaeaea" stroke-width="1"/>`;
+    g+=`<text x="${PL-7}" y="${yy+3.5}" text-anchor="end" font-size="10" fill="#8a938c">${v}</text>`;}
+  const step=Math.max(1,Math.ceil(n/8));
+  for(let i=0;i<n;i+=step)g+=`<text x="${X(i)}" y="${H-12}" text-anchor="middle" font-size="10" fill="#8a938c">${esc(labels[i])}</text>`;
+  series.forEach(s=>{if(HIDDEN.has(s.name))return;const pts=s.data.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+    g+=`<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>`;});
+  g+=`<g class="hov"></g>`;
+  return {svg:`<svg viewBox="0 0 ${W} ${H}" class="chart">${g}</svg>`,W,H,PL,PR,PT,PB,n,X,Y,series,labels};
+}
+function attachHover(el,ch){const tip=document.createElement('div');tip.className='tip';el.appendChild(tip);const svg=el.querySelector('svg');if(!svg)return;
+  svg.addEventListener('mousemove',ev=>{const r=svg.getBoundingClientRect();const sx=(ev.clientX-r.left)/r.width*ch.W;
+    let idx=Math.round((sx-ch.PL)/((ch.W-ch.PL-ch.PR)/Math.max(1,ch.n-1)));idx=Math.max(0,Math.min(ch.n-1,idx));
+    const hov=svg.querySelector('.hov');let h=`<line x1="${ch.X(idx)}" y1="${ch.PT}" x2="${ch.X(idx)}" y2="${ch.H-ch.PB}" stroke="#b9c9be" stroke-width="1" stroke-dasharray="3 3"/>`;
+    ch.series.forEach(s=>{if(HIDDEN.has(s.name))return;h+=`<circle cx="${ch.X(idx)}" cy="${ch.Y(s.data[idx])}" r="3.4" fill="${s.color}" stroke="#fff" stroke-width="1.5"/>`;});
+    hov.innerHTML=h;
+    tip.innerHTML=`<b>${esc(ch.labels[idx])}</b><br>`+ch.series.filter(s=>!HIDDEN.has(s.name)).map(s=>`<span style="color:${s.color}">&#9679;</span> ${esc(s.name)}: ${s.data[idx]}`).join('<br>');
+    tip.style.opacity=1;tip.style.left=Math.min(el.clientWidth-130,Math.max(0,ch.X(idx)/ch.W*el.clientWidth+10))+'px';tip.style.top='6px';});
+  svg.addEventListener('mouseleave',()=>{const hov=svg.querySelector('.hov');if(hov)hov.innerHTML='';tip.style.opacity=0;});}
+function mountCharts(){
+  const pairs=[['chart-main',window.__mainChart],['chart-lag',window.__lagChart]];
+  pairs.forEach(([id,ch])=>{const el=document.getElementById(id);if(el){el.innerHTML='';if(ch){el.innerHTML=ch.svg;attachHover(el,ch);}}});
+  const hm=document.getElementById('heat-main');if(hm&&window.__heat)hm.innerHTML=window.__heat;
+}
+function heatmapSVG(matrix,keys){
+  const n=keys.length;
+  let g=`<div class="heat" style="grid-template-columns:60px repeat(${n},1fr)">`;
+  g+=`<div class="hcell"></div>`+keys.map(k=>`<div class="hcell">${k[1]}</div>`).join('');
+  for(let i=0;i<n;i++){g+=`<div class="hcell" style="justify-content:flex-end;padding-right:6px">${keys[i][1]}</div>`;
+    for(let j=0;j<n;j++){const r=matrix[i][j];const a=Math.min(1,Math.abs(r))*0.85+0.08;
+      const c=r>=0?`rgba(0,120,212,${a})`:`rgba(194,104,10,${a})`;
+      g+=`<div class="cell" style="background:${c}" title="${keys[i][1]} ↔ ${keys[j][1]}: r=${r.toFixed(2)}">${r.toFixed(1).replace('-0.0','0.0')}</div>`;}}
+  g+=`</div>`;return g;
+}
+function ringSVG(pct,label,sub){
+  const R=68,C=2*Math.PI*R,off=C*(1-Math.max(0,Math.min(1,pct)));
+  return `<div class="ringwrap"><svg viewBox="0 0 170 170" role="img" aria-label="${esc(label)} ${esc(sub)}"><circle cx="85" cy="85" r="${R}" fill="none" stroke="#e6e6e6" stroke-width="12"/>
+   <circle cx="85" cy="85" r="${R}" fill="none" stroke="#2e7d4f" stroke-width="12" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 85 85)"/></svg>
+   <div class="mid"><b>${label}</b><span>${sub}</span></div></div>`;
+}
+function sparkSVG(data,color){const W=120,H=28,n=data.length;if(n<2)return '';const X=i=>i*(W-2)/(n-1)+1,Y=v=>H-2-(Math.max(0,Math.min(10,v))/10)*(H-4);
+  const pts=data.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:120px;height:28px"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.8"/></svg>`;}
+
+/* ============================== analysis ============================== */
+function redFlags(e){const t=((e.notes||'')+' '+(e.loc||'')).toLowerCase();const f=[];
+  REDWORDS.forEach(([re,l])=>{if(re.test(t)&&f.indexOf(l)<0)f.push(l);});
+  if((e.symptoms.cardiac||0)>=8)f.push('severe cardiac symptoms');
+  if((e.symptoms.respiratory||0)>=8)f.push('severe respiratory symptoms');
+  if((e.symptoms.neurological||0)>=8)f.push('severe neurological symptoms');
+  return f;}
+function recentRedFlags(c){const out=[];[...c.logs].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,3).forEach(l=>{const f=redFlags(l);if(f.length)out.push({date:l.date,flags:f});});return out;}
+function analyse(c){
+  if(!c||!Array.isArray(c.logs))return {n:0,logs:[],labels:[],skin:[],S:{},R:{},ranked:[],M:[],inv:false,avgSkin:'0.0',skinTrend:'0'};
+  const logs=[...c.logs].sort((a,b)=>a.date.localeCompare(b.date));const n=logs.length;
+  const skin=logs.map(l=>l.skin);
+  const S={};SYMPTOMS.forEach(([k])=>S[k]=logs.map(l=>l.symptoms?.[k]||0));
+  const stress=logs.map(l=>l.habits?.stress||0),cold=logs.map(l=>l.habits?.coldDrinks||0);
+  const alc=logs.map(l=>(l.habits?.alcohol||0)+(l.habits?.heavyFood?1:0));
+  const men=logs.map(l=>l.habits?.menstruating?1:0);
+  const lag=(a,b)=>{if(n<4)return 0;return pearson(a.slice(1,n),b.slice(0,n-1));};
+  const R={};R.skin_resp=pearson(skin,S.respiratory);R.skin_card=pearson(skin,S.cardiac);
+  R.skin_dig=pearson(skin,S.digestive);R.skin_neuro=pearson(skin,S.neurological);R.skin_gyn=pearson(skin,S.gynaecological);
+  R.skin_stress=pearson(skin,stress);R.skin_cold=pearson(skin,cold);R.skin_alc=pearson(skin,alc);R.skin_men=pearson(skin,men);
+  R.dig_neuro=pearson(S.digestive,S.neurological);R.dig_lead_skin=lag(skin,S.digestive);
+  const has=id=>!!c.bodyMap[id];const hist=c.history.events||[];
+  const histHas=re=>hist.some(e=>re.test((e.eruption||'')+' '+(e.complaint||'')));
+  const scores={},reasons={};const add=(id,p,w)=>{scores[id]=(scores[id]||0)+p;(reasons[id]=reasons[id]||[]).push(w);};
+  if(R.skin_resp<-0.25)add('liver',30,`breathing worsens as the skin clears (r=${R.skin_resp.toFixed(2)})`);
+  if(R.skin_alc>0.25)add('liver',25,`skin flares with heavy food/alcohol (r=${R.skin_alc.toFixed(2)})`);
+  if(has('sternum'))add('liver',20,'sternal patch marked (the liver-heart sign)');
+  if(histHas(/arm|chest|sternum/i))add('liver',8,'history of a suppressed arm/chest eruption');
+  if(has('neck'))add('spleen',18,'neck / glandular region marked');
+  if(histHas(/lupus|ringworm|gland|scrofula|neck/i))add('spleen',22,'history of lupus, ringworm or glandular swelling');
+  if(c.meta.refractory)add('spleen',10,'skin refractory to topical treatment');
+  if(R.skin_card<-0.25)add('heart',30,`cardiac symptoms worsen as the skin clears (r=${R.skin_card.toFixed(2)})`);
+  if(R.skin_stress>0.25)add('heart',20,`skin flares with stress (r=${R.skin_stress.toFixed(2)})`);
+  if(histHas(/arm|chest/i))add('heart',18,'history of a suppressed arm or chest eruption');
+  if(R.skin_resp<-0.25)add('lung',30,`asthma/breathing worsens as the skin clears (r=${R.skin_resp.toFixed(2)})`);
+  if(R.skin_cold>0.25)add('lung',18,`skin flares with cold drinks / cold air (r=${R.skin_cold.toFixed(2)})`);
+  if(histHas(/child|asthma|measles|erupt/i))add('lung',14,'history of a suppressed childhood eruption');
+  if(has('scalp')||has('face'))add('eye',22,'eruption on scalp or face');
+  if(histHas(/cataract|eye|sight|ophthalm|trachoma/i))add('eye',26,'visual symptoms followed a skin "cure"');
+  if(histHas(/scalp/i))add('eye',12,'ointment applied to the scalp');
+  if(R.skin_dig>0.25)add('gutbrain',22,`skin flares with gut symptoms (r=${R.skin_dig.toFixed(2)})`);
+  if(R.dig_lead_skin>0.25)add('gutbrain',22,`gut symptoms precede the skin flare (r=${R.dig_lead_skin.toFixed(2)})`);
+  if(R.dig_neuro>0.25)add('gutbrain',18,`neurological symptoms follow the gut (r=${R.dig_neuro.toFixed(2)})`);
+  if(has('abdomen'))add('gutbrain',8,'abdomen marked');
+  if(R.skin_men>0.3)add('pelvis',32,`skin flares before or during menstruation (r=${R.skin_men.toFixed(2)})`);
+  if(R.skin_gyn>0.25)add('pelvis',20,`pelvic symptoms trade with the skin (r=${R.skin_gyn.toFixed(2)})`);
+  if(c.meta.refractory)add('pelvis',14,'skin refractory to all topical treatment');
+  if(has('chin'))add('pelvis',12,'chin marked (the pelvis sign)');
+  const max=Math.max(1,...Object.values(scores));
+  const ranked=AXES.map(a=>({id:a.id,name:a.name,organ:a.organ,raw:scores[a.id]||0,pct:Math.round((scores[a.id]||0)/max*100),reasons:reasons[a.id]||[]})).sort((x,y)=>y.raw-x.raw);
+  const vecs=HEAT_KEYS.map(([k])=>k==='skin'?skin:S[k]);
+  const M=vecs.map(a=>vecs.map(b=>pearson(a,b)));
+  return {n,logs,labels:logs.map(l=>shortD(l.date)),skin,S,R,ranked,M,
+    inv:(R.skin_resp<-0.2||R.skin_card<-0.2),
+    avgSkin:mean(skin).toFixed(1),
+    skinTrend:n>=4?(mean(skin.slice(-7))-mean(skin.slice(0,7))).toFixed(1):'0'};
+}
+function flareAnalysis(c){
+  const foods={};c.flares.forEach(f=>{(f.food48||'').split(/[,;\/]+/).map(s=>s.trim().toLowerCase()).filter(Boolean).forEach(x=>foods[x]=(foods[x]||0)+1);});
+  const foodRank=Object.entries(foods).sort((a,b)=>b[1]-a[1]);
+  const cyc={};c.flares.forEach(f=>{if(f.cycle)cyc[f.cycle]=(cyc[f.cycle]||0)+1;});
+  return {foodRank,cyc,
+    fStress:mean(c.flares.map(f=>+f.stress||0)),fSleep:mean(c.flares.map(f=>+f.sleep||0)),
+    lStress:mean(c.logs.map(l=>l.habits?.stress||0)),lSleep:mean(c.logs.map(l=>l.habits?.sleep||0)),
+    n:c.flares.length,sev:mean(c.flares.map(f=>+f.severity||0))};
+}
+function baselineCompare(c){const logs=[...c.logs].sort((a,b)=>a.date.localeCompare(b.date));const n=logs.length;if(n<10)return null;
+  const k=Math.min(30,Math.floor(n/2));const first=logs.slice(0,k),last=logs.slice(-k);const m=a=>mean(a);
+  const out={k,skin:[m(first.map(l=>l.skin)),m(last.map(l=>l.skin))]};
+  SYMPTOMS.forEach(([key])=>{out[key]=[m(first.map(l=>l.symptoms?.[key]||0)),m(last.map(l=>l.symptoms?.[key]||0))];});
+  return out;}
+function conclusions(c,A){
+  const strong=[],mod=[];
+  const cls=(r,label)=>{const a=Math.abs(r);if(a>=0.5)strong.push(label);else if(a>=0.3)mod.push(label);};
+  cls(A.R.skin_resp,'skin ↔ respiratory');cls(A.R.skin_card,'skin ↔ cardiac');cls(A.R.skin_dig,'skin ↔ digestive');
+  cls(A.R.skin_gyn,'skin ↔ gynaecological');cls(A.R.skin_men,'skin ↔ menstruation');
+  const conf=A.n>=45?'moderate':A.n>=30?'low–moderate':'low';
+  const top=A.ranked.filter(r=>r.raw>0)[0];
+  const lines=[];
+  lines.push(`With <b>${A.n} entries</b>, the record ${top?`leans toward the <b>${top.name}</b>`:'does not yet favour a single axis'}.`);
+  if(A.inv)lines.push(`It shows an <b>inverse covariation</b> between the skin and an internal symptom — the skin clears as the symptom worsens — the book's signature of a suppressed eruption travelling inward.`);
+  if(strong.length)lines.push(`Strong associations (|r| ≥ 0.5): ${strong.join('; ')}.`);
+  if(mod.length)lines.push(`Moderate associations (0.3 ≤ |r| < 0.5): ${mod.join('; ')}.`);
+  lines.push(`Statistical confidence in this reading is <b>${conf}</b> — it rises with the number of entries and with a second 90-day loop.`);
+  return lines;
+}
+function axisEvidence(id){const c=active();if(!c)return;const A=analyse(c);const r=A.ranked.find(x=>x.id===id);if(!r)return;
+  const top=[...A.logs].sort((a,b)=>(b.symptoms?.[axisSym(id)]||0)-(a.symptoms?.[axisSym(id)]||0)).slice(0,5);
+  const sym=axisSym(id);const symLabel=(SYMPTOMS.find(s=>s[0]===sym)||[,''])[1];
+  showModal(`<h3>${esc(r.name)} — evidence</h3><p>Score ${r.pct}% · organ: ${esc(r.organ)}</p>`+
+    (r.reasons.length?`<ul>${r.reasons.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<p>No positive signals yet.</p>')+
+    (sym&&top.length?`<p class="muted">Highest ${esc(symLabel)} days in your log:</p><table class="t"><thead><tr><th>Date</th><th>${esc(sym.slice(0,4))}</th><th>Skin</th></tr></thead><tbody>${top.map(l=>`<tr><td>${fmt(l.date)}</td><td>${l.symptoms?.[sym]||0}</td><td>${l.skin}</td></tr>`).join('')}</tbody></table>`:''));}
+function axisSym(id){return {liver:'respiratory',heart:'cardiac',lung:'respiratory',gutbrain:'digestive',pelvis:'gynaecological'}[id]||null;}
+
+/* ============================== dashboard ============================== */
+function viewDashboard(c){
+  const A=analyse(c);const day=dayIndex(c.start);const pct=Math.min(1,c.logs.length/90);
+  const last=c.logs.length?[...c.logs].sort((a,b)=>b.date.localeCompare(a.date))[0]:null;
+  const top=A.ranked.filter(r=>r.raw>0)[0];const st=streak(c);const missed=missedDays(c,10);const rf=recentRedFlags(c);
+  const next=[];
+  if(!c.history.narrative)next.push(['Complete the intake history','intake']);
+  if(!Object.keys(c.bodyMap).length)next.push(['Annotate the body map','intake']);
+  if(!c.plan.remedy)next.push(['Record the treatment plan','intake']);
+  if(!last||last.date!==todayISO())next.push(["Log today's entry",'log']);
+  if(day>=30&&!c.reviews[30])next.push(['Do the 30-day review','reviews']);
+  if(day>=60&&!c.reviews[60])next.push(['Do the 60-day review','reviews']);
+  if(day>=90&&!c.reviews[90])next.push(['Do the 90-day review','reviews']);
+  const tiles=[
+    ['Entries logged',c.logs.length,'of 90 target'],
+    ['Current streak',st,'consecutive days'],
+    ['Mean skin severity',A.avgSkin,'0–10'],
+    ['Flares logged',c.flares.length,'trigger records']
+  ].map(([k,v,d])=>`<div class="tile"><div class="k">${k}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join('');
+  const series=[{name:'Skin',color:'#2f5140',data:A.skin},{name:'Respiratory',color:'#c2680a',data:A.S.respiratory}];
+  window.__mainChart=lineChart(series,A.labels,{h:200});
+  const rfHTML=rf.length?`<div class="danger" style="margin-top:12px"><b>Red flag recorded recently.</b> ${rf.map(x=>fmt(x.date)+': '+esc(x.flags.join(', '))).join('; ')}. If any of this is happening now, seek emergency care.</div>`:'';
+  return `<div class="printhead"><b>HHMS Skin-Case Tracker</b> — ${esc(c.name)} · day ${day} · generated ${fmt(todayISO())}</div>
+  <div class="card">
+    <div class="hero">
+      <div>${ringSVG(pct,day,'day of loop')}</div>
+      <div>
+        <h2>${esc(c.name)}</h2>
+        <p class="note">Started ${fmt(c.start)} · ${esc(c.meta.sex||'')}${c.meta.age?' · '+esc(c.meta.age)+' yrs':''} · hypothesis: <b>${c.axisHypothesis.axis?(AXES.find(a=>a.id===c.axisHypothesis.axis)||{}).name:c.axisHypothesis.axis||'not set'}</b></p>
+        ${A.inv?`<div class="warn"><b>Inverse covariation detected.</b> The skin and an internal symptom move in opposite directions (r = ${A.R.skin_resp.toFixed(2)}). In the book's reading, that is the signature of a suppressed eruption travelling inward.</div>`:
+          `<div class="info">The pattern engine needs a few more entries before it can read a signature. Keep logging.</div>`}
+        ${top?`<p class="muted" style="margin-top:12px">Strongest axis so far: <b>${top.name}</b> (${top.pct}%). ${top.reasons[0]?esc(top.reasons[0])+'.':''}</p>`:''}
+        ${rfHTML}
+      </div>
+    </div>
+    <div class="grid g4" style="margin-top:18px">${tiles}</div>
+  </div>
+  <div class="card">
+    <h2>What to do next</h2>
+    ${next.length?`<div class="flow">${next.map(([t,tab])=>`<div class="n" onclick="setTab('${tab}')"><b>${esc(t)}</b><span>open ${tab}</span></div>`).join('')}</div>`:'<div class="info">Everything is up to date. Keep logging; the next review is at day 30 / 60 / 90.</div>'}
+    ${missed.length?`<p class="faint" style="margin-top:10px">Gaps in the last 10 days: ${missed.map(fmt).join(', ')}. Use <b>Copy yesterday</b> on the Daily Log to backfill.</p>`:''}
+  </div>
+  <div class="card">
+    <h2>Skin and breathing, over the loop</h2>
+    <p class="note">The signature of the liver/lung axis is the two lines moving in opposite directions. Hover the chart to read any day; click a legend item to show or hide it.</p>
+    <div class="chartwrap" id="chart-main" data-chart></div>
+    <div class="legendrow">${legendHTML(series)}</div>
+  </div>`;
+}
+
+/* ============================== cases ============================== */
+function skinSeries(c){return [...c.logs].sort((a,b)=>a.date.localeCompare(b.date)).map(l=>l.skin);}
+function caseTableHTML(q){q=(q||'').toLowerCase();
+  const list=STATE.cases.filter(c=>!q||c.name.toLowerCase().indexOf(q)>=0);
+  const rows=list.map(c=>{const day=dayIndex(c.start),n=c.logs.length,pct=Math.round(Math.min(100,n/90*100));
+    return `<tr><td><b>${esc(c.name)}</b><div class="faint">started ${fmt(c.start)}</div></td><td>Day ${day}</td><td>${n}</td>
+      <td>${sparkSVG(skinSeries(c).slice(-20),'#2e7d4f')}</td>
+      <td style="min-width:120px"><div class="bar"><i style="width:${pct}%"></i></div></td>
+      <td class="noprint"><button class="btn primary sm" onclick="selectCase('${c.id}');setTab('dashboard')">Open</button>
+      <button class="btn sm" onclick="delCase('${c.id}')">Delete</button></td></tr>`;}).join('');
+  return list.length?`<table class="t"><thead><tr><th>Case</th><th>Day</th><th>Logs</th><th>Skin (last 20)</th><th>Progress to 90</th><th class="noprint"></th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty">No cases match. Create one, or load the demo.</div>';}
+function filterCases(q){q=q||'';const el=document.getElementById('casesTable');if(el)el.innerHTML=caseTableHTML(q);
+  const cnt=document.getElementById('caseCount');if(cnt)cnt.textContent=STATE.cases.filter(c=>!q||c.name.toLowerCase().indexOf(q.toLowerCase())>=0).length;}
+function viewCases(){
+  return `<div class="card">
+    <h2>Cases</h2>
+    <p class="note">Each case is one patient and one 90-day audit loop. Everything is stored locally in this browser.</p>
+    <div class="row noprint"><button class="btn primary" onclick="newCase()">+ New case</button>
+      <button class="btn" onclick="loadDemo()">Load demo case (45 days)</button>
+      <button class="btn" onclick="exportJSON()">Export all (JSON)</button>
+      <label class="btn" style="cursor:pointer">Import JSON<input type="file" accept=".json" style="display:none" onchange="importJSON(this)"></label>
+      <input type="search" id="caseSearch" placeholder="Search cases…" oninput="filterCases(this.value)" style="width:200px" aria-label="Search cases"></div>
+    <h3>All cases (<span id="caseCount">${STATE.cases.length}</span>)</h3>
+    <div id="casesTable">${caseTableHTML('')}</div>
+  </div>`;
+}
+
+/* ============================== intake ============================== */
+function viewIntake(c){
+  const ev=c.history.events.map((e,i)=>{const lat=e.dateCured&&e.onset?monthsBetween(e.dateCured,e.onset):null;
+    const latTxt=lat==null?'—':(lat<1?'< 1 month':(lat<24?lat+' months':Math.round(lat/12)+' years'));
+    return `<tr><td>${esc(e.eruption)}</td><td>${esc(e.agent)}</td><td>${fmt(e.dateCured)}</td><td>${esc(e.complaint)}</td><td>${fmt(e.onset)}</td><td><span class="pill amber">${latTxt}</span></td><td><button class="btn sm" onclick="delEvent(${i})">✕</button></td></tr>`;}).join('');
+  const gallery=(c.photos||[]).map(p=>`<div class="photo"><button class="x" onclick="delPhoto('${p.id}')" aria-label="Delete photo">✕</button><img src="${p.data}" alt="Skin photo ${fmt(p.date)}"><div class="meta">${fmt(p.date)}${p.note?' · '+esc(p.note):''}</div></div>`).join('');
+  return `<div class="card">
+    <h2>Skin-Case Intake SOP</h2>
+    <p class="note">Five steps, as in the book (Ch. 14.2): full history · dashboard setup · body map · axis hypothesis · treatment plan.</p>
+    <h3>1 · Full health history</h3>
+    <label class="f">Narrative</label><textarea oninput="upd('history','narrative',this.value)">${esc(c.history.narrative)}</textarea>
+    <label class="f">Skin eruptions "cured" before the internal complaint — the audit of the suppression</label>
+    <table class="t"><thead><tr><th>Eruption</th><th>Suppressing agent</th><th>Date "cured"</th><th>Later complaint</th><th>Onset</th><th>Latency</th><th></th></tr></thead><tbody>${ev||'<tr><td colspan="7" class="muted">No events yet.</td></tr>'}</tbody></table>
+    <details class="noprint"><summary>+ Add a suppressed-eruption event</summary><div class="grid g3">
+      <div><label class="f">Eruption</label><input type="text" id="ev_er" placeholder="e.g. eczema, bends of arms"></div>
+      <div><label class="f">Suppressing agent</label><input type="text" id="ev_ag" placeholder="e.g. ointment"></div>
+      <div><label class="f">Date "cured"</label><input type="date" id="ev_dc"></div>
+      <div><label class="f">Later complaint</label><input type="text" id="ev_cp" placeholder="e.g. asthma"></div>
+      <div><label class="f">Onset</label><input type="date" id="ev_on"></div>
+      <div style="align-self:end"><button class="btn primary" onclick="addEvent()">Add event</button></div></div></details>
+    <div class="grid g3">
+      <div><label class="f">Sex</label><select onchange="upd('meta','sex',this.value)">${['','F','M','other'].map(s=>`<option ${c.meta.sex===s?'selected':''}>${s}</option>`).join('')}</select></div>
+      <div><label class="f">Age</label><input type="text" value="${esc(c.meta.age)}" oninput="upd('meta','age',this.value)"></div>
+      <div><label class="f">Refractory to topical treatment?</label><div class="chk"><input type="checkbox" ${c.meta.refractory?'checked':''} onchange="upd('meta','refractory',this.checked)"> yes</div></div>
+    </div>
+    <h3>2 · HHMS dashboard setup</h3>
+    <p class="note">The four fields are initialised by the app: <b>History</b> (above), <b>Habits</b>, <b>Mapping</b> and <b>Symptoms</b> (logged on the Daily Log tab). Cadence: daily for 30 days, every other day for the next 30, twice a week for the last 30.</p>
+    <h3>3 · Body map — where is the eruption, where has it been, where has it migrated</h3>
+    <div class="bodywrap">${bodySVG(c)}
+      <div style="flex:1;min-width:250px">
+        <p class="legend">Click a region to cycle: <span class="tag" style="background:#a4262c"></span><b>present</b> · <span class="tag" style="background:#c2680a"></span><b>has been</b> · <span class="tag" style="background:#0078d4"></span><b>migrated</b></p>
+        <div id="regionList">${regionSummary(c)}</div>
+        <p class="muted" style="margin-top:10px">The location points to the axis: <b>sternal patch</b> → liver-heart; <b>bends of arms</b> → heart; <b>scalp</b> → eye; <b>chin</b> → pelvis.</p>
+      </div></div>
+    <h3>3b · Photographs (body-map annotation + photo)</h3>
+    <p class="note">Attach a photo of the eruption. Images are downscaled and stored only in this browser.</p>
+    <div class="row noprint"><label class="btn primary" style="cursor:pointer">Add photo<input type="file" accept="image/*" capture="environment" style="display:none" onchange="addPhoto(this)"></label></div>
+    ${(c.photos||[]).length?`<div class="gallery" style="margin-top:12px">${gallery}</div>`:'<p class="faint" style="margin-top:8px">No photos yet.</p>'}
+    <h3>4 · Axis hypothesis</h3>
+    <select onchange="upd('axisHypothesis','axis',this.value)"><option value="">—</option>${AXES.map(a=>`<option value="${a.id}" ${c.axisHypothesis.axis===a.id?'selected':''}>${a.name}</option>`).join('')}</select>
+    <label class="f">Notes</label><textarea oninput="upd('axisHypothesis','notes',this.value)">${esc(c.axisHypothesis.notes)}</textarea>
+    <h3>5 · Treatment plan</h3>
+    <div class="grid g3">
+      <div><label class="f">Remedy</label><input type="text" value="${esc(c.plan.remedy)}" oninput="upd('plan','remedy',this.value)"></div>
+      <div><label class="f">Potency</label><input type="text" value="${esc(c.plan.potency)}" oninput="upd('plan','potency',this.value)"></div>
+      <div><label class="f">Frequency</label><input type="text" value="${esc(c.plan.frequency)}" oninput="upd('plan','frequency',this.value)"></div></div>
+    <label class="f">Expected timeline for re-emergence</label><input type="text" value="${esc(c.plan.timeline)}" oninput="upd('plan','timeline',this.value)">
+    <p class="faint" style="margin-top:12px">The remedy fields record what was prescribed. This app does not prescribe and gives no medical advice.</p>
+  </div>`;
+}
+function bodySVG(c){const st=id=>SST[c.bodyMap[id]||0].c;
+  const body=`<path d="M150 26c-13 0-23 10-23 23s10 23 23 23 23-10 23-23-10-23-23-23z" fill="#e7e2d3" stroke="#c9c1ab"/>
+   <rect x="138" y="70" width="24" height="18" fill="#e7e2d3" stroke="#c9c1ab"/>
+   <path d="M108 92h84l10 150-18 6-8-70-8 0-6 130h-24l-6-130-8 0-8 70-18-6z" fill="#e7e2d3" stroke="#c9c1ab"/>
+   <rect x="96" y="240" width="26" height="150" fill="#e7e2d3" stroke="#c9c1ab"/>
+   <rect x="178" y="240" width="26" height="150" fill="#e7e2d3" stroke="#c9c1ab"/>
+   <rect x="118" y="392" width="28" height="180" fill="#e7e2d3" stroke="#c9c1ab"/>
+   <rect x="154" y="392" width="28" height="180" fill="#e7e2d3" stroke="#c9c1ab"/>`;
+  const spots=REGIONS.map(r=>`<circle class="hot" cx="${r.x}" cy="${r.y}" r="13" fill="${st(r.id)}" stroke="#fff" stroke-width="2" onclick="cycleRegion('${r.id}')"><title>${r.name}</title></circle>`).join('');
+  return `<svg viewBox="0 0 300 600" role="img" aria-label="Body map">${body}${spots}</svg>`;}
+function cycleRegion(id){const c=active();if(!c)return;c.bodyMap[id]=((c.bodyMap[id]||0)+1)%4;save();render();}
+function regionSummary(c){const on=REGIONS.filter(r=>c.bodyMap[r.id]);return on.length?on.map(r=>`${r.name} (${SST[c.bodyMap[r.id]].n})`).join(', '):'none marked';}
+function addEvent(){const c=active();if(!c)return;const g=id=>document.getElementById(id).value;
+  const e={eruption:g('ev_er'),agent:g('ev_ag'),dateCured:g('ev_dc'),complaint:g('ev_cp'),onset:g('ev_on')};
+  if(!e.eruption){toast('Give the eruption a name first');return;}c.history.events.push(e);save();render();toast('Event added');}
+function delEvent(i){const c=active();if(!c)return;const ev=c.history.events.splice(i,1)[0];save();render();
+  toastAction('Event removed','Undo',()=>{c.history.events.splice(i,0,ev);save();render();});}
+function upd(group,key,val){const c=active();if(!c)return;c[group][key]=val;save();}
+function addPhoto(inp){const c=active();if(!c)return;const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const img=new Image();img.onload=()=>{try{const max=900;let w=img.width,h=img.height;if(Math.max(w,h)>max){const s=max/Math.max(w,h);w=Math.round(w*s);h=Math.round(h*s);}
+    const cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);
+    const data=cv.toDataURL('image/jpeg',0.7);c.photos=c.photos||[];c.photos.push({id:uid(),date:todayISO(),note:'',data});save();render();toast('Photo added');}catch(err){toast('Could not process that image');}}
+    img.onerror=()=>toast('Could not read that image');img.src=r.result;}catch(err){toast('Could not read that file');}};
+  r.onerror=()=>toast('Could not read that file');r.readAsDataURL(f);inp.value='';}
+function delPhoto(id){const c=active();if(!c)return;const i=(c.photos||[]).findIndex(p=>p.id===id);if(i<0)return;const p=c.photos.splice(i,1)[0];save();render();
+  toastAction('Photo removed','Undo',()=>{c.photos.splice(i,0,p);save();render();});}
+
+/* ============================== daily log ============================== */
+function cadenceFor(day){if(day<=30)return{t:'Daily (first 30 days)'};if(day<=60)return{t:'Every other day (days 31–60)'};return{t:'Twice a week (days 61–90)'};}
+function setLogDate(d){LOGDATE=d;const c=active();if(!c)return;const e=c.logs.find(l=>l.date===d);document.getElementById('logForm').innerHTML=logForm(c,e,d);}
+function viewLog(c){const day=dayIndex(c.start),cad=cadenceFor(day);
+  const recent=[...c.logs].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,16).map(l=>`<tr><td>${fmt(l.date)}</td><td>${l.skin}</td><td>${symptomMini(l)}</td><td class="muted">${esc(l.notes||'')}</td><td class="noprint"><button class="btn sm" onclick="setLogDate('${l.date}')">edit</button></td></tr>`).join('');
+  return `<div class="card"><h2>Daily Log</h2>
+    <p class="note">One entry a day, all four fields. Current cadence — <b>${cad.t}</b>. Day ${day} of the 90-day loop. Streak: <b>${streak(c)}</b> day(s).</p>
+    <div class="row"><label class="f" style="margin:0">Date</label><input type="date" id="logDate" value="${LOGDATE}" onchange="setLogDate(this.value)" style="width:auto">
+      <button class="btn" onclick="copyYesterday()">Copy yesterday</button></div>
+    <div id="logForm"></div>
+    <h3>Recent entries</h3>
+    ${c.logs.length?`<table class="t"><thead><tr><th>Date</th><th>Skin</th><th>Symptoms</th><th>Note</th><th class="noprint"></th></tr></thead><tbody>${recent}</tbody></table>`:'<div class="empty">No entries yet.</div>'}</div>`;
+}
+function symptomMini(l){return SYMPTOMS.map(([k])=>`${k.slice(0,4)} ${l.symptoms?.[k]||0}`).join(' · ');}
+function logForm(c,e,d){const h=e?e.habits:{stress:0,coldDrinks:0,alcohol:0,sleep:7,heavyFood:false,menstruating:false,medications:'',vaccination:''};
+  const sy=e?e.symptoms:{cardiac:0,respiratory:0,digestive:0,neurological:0,gynaecological:0};const skin=e?e.skin:0,loc=e?e.loc:'';
+  const sl=(id,label,val)=>`<div class="slider"><span style="width:180px" class="muted">${label}</span><input type="range" min="0" max="10" value="${val}" id="${id}" aria-label="${esc(label)}" oninput="document.getElementById('${id}v').textContent=this.value"><span class="val" id="${id}v">${val}</span></div>`;
+  return `<div class="grid g2">
+    <div><h3>Mapping</h3>
+      <div class="slider"><span style="width:180px" class="muted">Skin severity (0–10)</span><input type="range" min="0" max="10" value="${skin}" id="f_skin" aria-label="Skin severity" oninput="document.getElementById('f_skinv').textContent=this.value"><span class="val" id="f_skinv">${skin}</span></div>
+      <label class="f">Skin location today</label><input type="text" id="f_loc" value="${esc(loc)}" placeholder="e.g. elbows, scalp">
+      <p class="muted">Marked regions: ${regionSummary(c)}</p>
+      <h3>Habits</h3>${sl('f_stress','Stress (0–10)',h.stress)}
+      <div class="grid g3">
+        <div><label class="f">Cold drinks</label><input type="number" min="0" id="f_cold" value="${h.coldDrinks}"></div>
+        <div><label class="f">Alcohol (units)</label><input type="number" min="0" id="f_alc" value="${h.alcohol}"></div>
+        <div><label class="f">Sleep (hours)</label><input type="number" min="0" step="0.5" id="f_sleep" value="${h.sleep}"></div></div>
+      <div class="chk"><input type="checkbox" id="f_food" ${h.heavyFood?'checked':''}> heavy / rich food in the last 24h</div>
+      <div class="chk"><input type="checkbox" id="f_men" ${h.menstruating?'checked':''}> menstruating today</div>
+      <label class="f">Medications</label><input type="text" id="f_med" value="${esc(h.medications)}">
+      <label class="f">Vaccination (notes)</label><input type="text" id="f_vac" value="${esc(h.vaccination)}"></div>
+    <div><h3>Symptoms — the deeper gauge</h3>
+      ${SYMPTOMS.map(([k,label])=>sl('f_s_'+k,label,sy[k])).join('')}
+      <label class="f">Free text</label><textarea id="f_notes" placeholder="A single sentence is enough.">${esc(e?e.notes:'')}</textarea>
+      <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveLog()">${e?'Update':'Save'} entry for ${fmt(d)}</button>
+      ${e?`<button class="btn" onclick="delLog('${d}')">Delete</button>`:''}</div></div></div>`;
+}
+function copyYesterday(){const c=active();if(!c)return;const _dt=new Date(LOGDATE+'T00:00:00');_dt.setDate(_dt.getDate()-1);const d=isoLocal(_dt);
+  const e=c.logs.find(l=>l.date===d);if(!e){toast('No entry on '+fmt(d));return;}
+  const copy=JSON.parse(JSON.stringify(e));copy.date=LOGDATE;document.getElementById('logForm').innerHTML=logForm(c,copy,LOGDATE);toast('Copied values from '+fmt(d)+' — review, then save');}
+function saveLog(){const c=active();if(!c)return;const d=LOGDATE,v=id=>document.getElementById(id);
+  const entry={date:d,skin:+v('f_skin').value,loc:v('f_loc').value,
+    habits:{stress:+v('f_stress').value,coldDrinks:+v('f_cold').value,alcohol:+v('f_alc').value,sleep:+v('f_sleep').value,heavyFood:v('f_food').checked,menstruating:v('f_men').checked,medications:v('f_med').value,vaccination:v('f_vac').value},
+    symptoms:{},notes:v('f_notes').value};
+  SYMPTOMS.forEach(([k])=>entry.symptoms[k]=+v('f_s_'+k).value);
+  const i=c.logs.findIndex(l=>l.date===d);if(i>=0)c.logs[i]=entry;else c.logs.push(entry);
+  c.logs.sort((a,b)=>a.date.localeCompare(b.date));save();render();
+  const rf=redFlags(entry);
+  if(rf.length){showModal('<h3 style="color:#a4262c">Possible emergency</h3><p>This entry records: <b>'+esc(rf.join(', '))+'</b>. These can be signs of a medical emergency. This app does not diagnose.</p><p>If this is happening now, seek emergency care immediately — call your local emergency number (in India, 108 / 112).</p>');}
+  else toast('Entry saved for '+fmt(d));}
+function delLog(d){const c=active();if(!c)return;const i=c.logs.findIndex(l=>l.date===d);if(i<0)return;const e=c.logs.splice(i,1)[0];save();render();
+  toastAction('Entry deleted','Undo',()=>{c.logs.push(e);c.logs.sort((a,b)=>a.date.localeCompare(b.date));save();render();});}
+
+/* ============================== flare ============================== */
+function viewFlare(c){const rows=[...c.flares].sort((a,b)=>b.date.localeCompare(a.date)).map(f=>{const i=c.flares.indexOf(f);
+    return `<tr><td>${fmt(f.date)} ${esc(f.time||'')}</td><td>${f.severity}</td><td>${esc(f.food48||'—')}</td><td>${esc(f.cycle||'—')}</td><td>${f.stress}</td><td>${f.sleep}</td><td>${esc(f.internal||'—')}</td><td class="noprint"><button class="btn sm" onclick="delFlare(${i})">✕</button></td></tr>`;}).join('');
+  const F=flareAnalysis(c);
+  const trig=F.foodRank.length?`<table class="t"><thead><tr><th>Trigger (48h food)</th><th>Times</th></tr></thead><tbody>${F.foodRank.map(([k,n])=>`<tr><td>${esc(k)}</td><td><span class="pill">${n}</span></td></tr>`).join('')}</tbody></table>`:'<p class="muted">No 48-hour food recorded yet.</p>';
+  const cyc=Object.keys(F.cyc).length?`<p class="muted">Cycle at flare: ${Object.entries(F.cyc).map(([k,n])=>esc(k)+' ('+n+')').join(', ')}.</p>`:'';
+  return `<div class="card"><h2>Flare Log</h2>
+    <p class="note">When the skin flares, record the trigger (Ch. 11.3): food in the last 48 hours · cycle · stress · sleep · whether an internal symptom came with it.</p>
+    <div class="grid g3">
+      <div><label class="f">Date</label><input type="date" id="fl_date" value="${todayISO()}"></div>
+      <div><label class="f">Time</label><input type="text" id="fl_time" placeholder="e.g. morning"></div>
+      <div><label class="f">Severity (0–10)</label><input type="number" min="0" max="10" id="fl_sev" value="5"></div>
+      <div><label class="f">Food, last 48h</label><input type="text" id="fl_food" placeholder="what was eaten"></div>
+      <div><label class="f">Cycle</label><select id="fl_cycle"><option value="">—</option><option>before period</option><option>during period</option><option>mid-cycle</option><option>not applicable</option></select></div>
+      <div><label class="f">Stress (0–10)</label><input type="number" min="0" max="10" id="fl_stress" value="3"></div>
+      <div><label class="f">Sleep (hours)</label><input type="number" min="0" step="0.5" id="fl_sleep" value="7"></div>
+      <div><label class="f">Internal symptom with the flare</label><input type="text" id="fl_int" placeholder="e.g. breathlessness"></div>
+      <div style="align-self:end"><button class="btn primary" onclick="saveFlare()">Add flare</button></div></div>
+    <h3>Trigger analysis</h3>
+    ${F.n?`<div class="grid g3">
+      <div class="tile alt"><div class="k">Flares logged</div><div class="v">${F.n}</div><div class="d">mean severity ${F.sev.toFixed(1)}</div></div>
+      <div class="tile alt"><div class="k">Stress at flare</div><div class="v">${F.fStress.toFixed(1)}</div><div class="d">vs ${F.lStress.toFixed(1)} overall</div></div>
+      <div class="tile alt"><div class="k">Sleep at flare</div><div class="v">${F.fSleep.toFixed(1)}h</div><div class="d">vs ${F.lSleep.toFixed(1)}h overall</div></div></div>
+      ${F.fStress>F.lStress+0.5?'<div class="warn" style="margin-top:12px">Stress runs higher at flare than your average — a candidate trigger.</div>':''}
+      ${F.fSleep<F.lSleep-0.5?'<div class="warn" style="margin-top:12px">Sleep runs lower at flare than your average — a candidate trigger.</div>':''}
+      <div style="margin-top:12px">${trig}${cyc}</div>`:'<div class="empty">No flares logged yet.</div>'}
+    <h3>Flares</h3>${c.flares.length?`<table class="t"><thead><tr><th>When</th><th>Sev</th><th>Food 48h</th><th>Cycle</th><th>Stress</th><th>Sleep</th><th>Internal</th><th class="noprint"></th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty">No flares logged.</div>'}</div>`;
+}
+function saveFlare(){const c=active();if(!c)return;const v=id=>document.getElementById(id).value;
+  c.flares.push({date:v('fl_date'),time:v('fl_time'),severity:+v('fl_sev'),food48:v('fl_food'),cycle:v('fl_cycle'),stress:+v('fl_stress'),sleep:+v('fl_sleep'),internal:v('fl_int')});save();render();toast('Flare logged');}
+function delFlare(i){const c=active();if(!c)return;const f=c.flares.splice(i,1)[0];save();render();
+  toastAction('Flare removed','Undo',()=>{c.flares.splice(i,0,f);save();render();});}
+
+/* ============================== pattern ============================== */
+function viewPattern(c){
+  if(!c.logs.length)return `<div class="card"><h2>Pattern &amp; Conclusions</h2><div class="empty">No logs yet. Add entries on the Daily Log tab, or load the demo case.</div></div>`;
+  const A=analyse(c);
+  const top=A.ranked.filter(r=>r.raw>0).slice(0,3);
+  const series=[{name:'Skin',color:'#2f5140',data:A.skin},{name:'Respiratory',color:'#c2680a',data:A.S.respiratory},
+    {name:'Cardiac',color:'#7a4fa3',data:A.S.cardiac},{name:'Digestive',color:'#a98b4a',data:A.S.digestive}];
+  window.__mainChart=lineChart(series,A.labels,{h:270});
+  window.__heat=heatmapSVG(A.M,HEAT_KEYS);
+  if(A.n>1){const lagSeries=[{name:'Skin (today)',color:'#2f5140',data:A.skin.slice(1)},{name:'Respiratory (previous day)',color:'#c2680a',data:A.S.respiratory.slice(0,-1)}];
+    window.__lagChart=lineChart(lagSeries,A.labels.slice(1),{h:220});}else window.__lagChart=null;
+  const bars=A.ranked.map(r=>`<div class="axisrow" onclick="axisEvidence('${r.id}')" title="${esc(r.reasons.join(' · ')||'no signals')}"><div class="hd"><span class="nm">${r.name}</span><span class="pill">${r.pct}%</span></div>
+    <div class="bar"><i style="width:${r.pct}%"></i></div>
+    ${r.reasons.length?`<ul class="muted" style="margin:7px 0 0 18px">${r.reasons.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}</div>`).join('');
+  const corr=[['skin_resp','Skin ↔ respiratory'],['skin_card','Skin ↔ cardiac'],['skin_dig','Skin ↔ digestive'],['skin_neuro','Skin ↔ neurological'],['skin_gyn','Skin ↔ gynaecological'],['skin_stress','Skin ↔ stress'],['skin_cold','Skin ↔ cold drinks'],['skin_alc','Skin ↔ heavy food/alcohol'],['skin_men','Skin ↔ menstruation'],['dig_lead_skin','Gut (previous day) → skin']]
+    .map(([k,l])=>{const r=A.R[k]||0;const dir=r<-0.2?'inverse':r>0.2?'direct':'weak';const cls=Math.abs(r)>=0.5?'green':Math.abs(r)>=0.3?'amber':'';return `<tr><td>${l}</td><td><span class="pill ${cls}">${r.toFixed(2)}</span></td><td class="muted">${dir}</td></tr>`;}).join('');
+  const concl=conclusions(c,A);
+  const BC=baselineCompare(c);
+  const bcHTML=BC?`<h3>Baseline vs current</h3><p class="note">First ${BC.k} entries compared with the most recent ${BC.k}.</p>
+    <table class="t"><thead><tr><th>Measure</th><th>Baseline</th><th>Current</th><th>Change</th></tr></thead><tbody>
+    ${[['Skin',BC.skin],...SYMPTOMS.map(([k,l])=>[l.split(' (')[0],BC[k]])].map(([l,v])=>{const d=v[1]-v[0];const cls=d<-.3?'green':d>.3?'amber':'';return `<tr><td>${esc(l)}</td><td>${v[0].toFixed(1)}</td><td>${v[1].toFixed(1)}</td><td><span class="pill ${cls}">${d>0?'+':''}${d.toFixed(1)}</span></td></tr>`;}).join('')}</tbody></table>`:'';
+  return `<div class="card">
+    <h2>Pattern &amp; Conclusions</h2>
+    <p class="note">The log is read as a pattern, not a snapshot. The signature is the covariation between the skin and the internal symptoms. This is an aid to the clinician's reading, not a diagnosis.</p>
+    <div class="grid g4">
+      <div class="tile"><div class="k">Entries</div><div class="v">${A.n}</div><div class="d">of 90 target</div></div>
+      <div class="tile"><div class="k">Mean skin</div><div class="v">${A.avgSkin}</div><div class="d">0–10</div></div>
+      <div class="tile"><div class="k">Skin trend</div><div class="v">${A.skinTrend>0?'+':''}${A.skinTrend}</div><div class="d">last 7 vs first 7</div></div>
+      <div class="tile"><div class="k">Strongest axis</div><div class="v" style="font-size:20px">${top[0]?top[0].name.split('-')[0]:'—'}</div><div class="d">${top[0]?top[0].pct+'%':'no signal'}</div></div>
+    </div>
+    ${A.inv?`<div class="warn" style="margin-top:14px"><b>Inverse covariation detected.</b> The skin and an internal symptom move in opposite directions (r = ${A.R.skin_resp.toFixed(2)}). In the book's reading this is the signature of a suppressed eruption travelling inward.</div>`:''}
+    <h3>Skin and internal symptoms over the loop</h3>
+    <div class="chartwrap" id="chart-main" data-chart></div>
+    <div class="legendrow">${legendHTML(series)}</div>
+    ${A.n>1?`<h3>Lead / lag — does the internal symptom move first?</h3>
+    <p class="note">Skin today plotted against the respiratory reading of the <b>previous day</b>. If the two track each other, the internal symptom is leading the skin.</p>
+    <div class="chartwrap" id="chart-lag" data-chart></div>
+    <div class="legendrow">${legendHTML([{name:'Skin (today)',color:'#2f5140'},{name:'Respiratory (previous day)',color:'#c2680a'}])}</div>`:''}
+    <h3>Correlation heat-map (skin and symptom groups)</h3>
+    <div class="grid g2"><div id="heat-main" data-chart style="max-width:460px"></div>
+      <div class="muted"><b>Blue</b> = the two move together (direct); <b>orange</b> = they move in opposite directions (inverse). Colour-blind-safe palette; every cell also prints its r value. The skin ↔ respiratory cell is the inverse-covariation signature. Hover any cell for the exact value.</div></div>
+    <h3>Organ-axis signature scores</h3><p class="note">Click an axis to see the evidence behind its score.</p>${bars}
+    ${bcHTML}
+    <h3>Correlations (skin vs symptom)</h3>
+    <table class="t"><thead><tr><th>Pair</th><th>r</th><th>Reading</th></tr></thead><tbody>${corr}</tbody></table>
+    <h3>Conclusions</h3>
+    <div class="info">${concl.map(l=>`<p style="margin:6px 0">${l}</p>`).join('')}</div>
+    <p class="faint" style="margin-top:10px">A single-case observational record can describe a pattern; it cannot prove one. To contribute to research, export the case as JSON (Data &amp; Export) and pool cases.</p>
+  </div>`;
+}
+
+/* ============================== reviews ============================== */
+const REVIEWS=[
+ {day:30,title:'30-day review',q:'Has the pattern emerged?',prompts:['Is the pattern visible in the dashboard?','Does the treatment match the axis? If not, change the remedy.','If the pattern is not visible, the intake was incomplete — revisit the history.']},
+ {day:60,title:'60-day review',q:'Has the treatment begun to work?',prompts:['Is the covariation between skin and internal symptom visible?','Is the eruption worsening (the reversal)?','Is the internal symptom improving?']},
+ {day:90,title:'90-day review',q:'Is the loop being restored?',prompts:['Has the eruption returned, worsened, and begun to resolve?','Has the internal symptom improved, stabilised, or resolved?','If the loop is being restored, reduce the treatment and confirm over a further 90 days.']}
+];
+function viewReviews(c){const day=dayIndex(c.start),rv=c.reviews||{};
+  const cards=REVIEWS.map(R=>{const reached=day>=R.day,done=rv[R.day];
+    return `<div class="card"><div class="row" style="justify-content:space-between"><h2>${R.title}</h2>
+      <span class="pill ${reached?(done?'green':'amber'):''}">${reached?(done?'completed':'due'):'day '+R.day+' · in '+(R.day-day)+' days'}</span></div>
+      <p class="note"><b>${R.q}</b></p><ul class="muted">${R.prompts.map(p=>`<li>${p}</li>`).join('')}</ul>
+      <label class="chk"><input type="checkbox" ${rv[R.day]?.yes?'checked':''} ${reached?'':'disabled'} onchange="setReview(${R.day},'yes',this.checked)"> yes / on track</label>
+      <label class="f">Notes</label><textarea ${reached?'':'disabled'} oninput="setReview(${R.day},'notes',this.value)">${esc(rv[R.day]?.notes||'')}</textarea></div>`;}).join('');
+  const items=[['Full intake history',!!c.history.narrative],['HHMS dashboard set up',c.logs.length>0],['Body map annotated',Object.keys(c.bodyMap).length>0],
+    ['Axis hypothesis written',!!c.axisHypothesis.axis],['Treatment plan recorded',!!c.plan.remedy],['Daily HHMS log kept',c.logs.length>0],
+    ['30-day review',!!rv[30]?.yes],['60-day review',!!rv[60]?.yes],['90-day review',!!rv[90]?.yes],['90-day confirmation (days 90–180)',!!rv.confirm]];
+  const done=items.filter(i=>i[1]).length;
+  return `<div class="card"><h2>The 30/60/90-Day Audit Loop</h2>
+    <p class="note">Review the record at fixed intervals and ask the hard questions. Day ${day} of the loop.</p>
+    <div class="bar"><i style="width:${Math.round(done/items.length*100)}%"></i></div>
+    <p class="muted">${done} of ${items.length} audit items complete.</p>
+    ${cards}
+    <div class="card"><div class="row" style="justify-content:space-between"><h2>90-day confirmation</h2>
+      <label class="chk"><input type="checkbox" ${rv.confirm?'checked':''} onchange="setReview('confirm','yes',this.checked)"> loop holds over a further 90 days</label></div>
+      <p class="note">If the loop holds, reduce and stop. If not, revisit the axis hypothesis and begin the loop again.</p></div>
+    <h3>Audit checklist</h3>
+    <table class="t"><thead><tr><th>Item</th><th>Status</th></tr></thead><tbody>${items.map(([t,ok])=>`<tr><td>${t}</td><td>${ok?'<span class="pill green">present</span>':'<span class="pill">missing</span>'}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function setReview(k,key,val){const c=active();if(!c)return;c.reviews=c.reviews||{};c.reviews[k]=c.reviews[k]||{};c.reviews[k][key]=val;save();render();}
+
+/* ============================== guide ============================== */
+function viewGuide(){
+  return `<div class="card guide">
+    <h2>Guide — what this is, and how to use it</h2>
+    <p class="note">The HHMS Skin-Case Tracker, by ${AUTHOR} (${BRAND}, ${YEAR}).</p>
+    <div class="row noprint" style="margin-bottom:8px"><button class="btn primary" onclick="startTour(0)">Take the guided tour</button><button class="btn" onclick="showSelfTests()">Run self-tests</button></div>
+    <h3>What this is</h3>
+    <p>A working implementation of the <b>HHMS dashboard</b> described in <i>${BOOK}</i> (chapters 11 and 14). HHMS stands for the four fields it records — <b>History, Habits, Mapping, Symptoms</b>. The book's claim is that the skin is the body's readout, and that a skin case should be tracked over time and read as a <i>pattern</i> rather than treated as a snapshot. This app is that tracking instrument.</p>
+    <h3>Who it is for</h3>
+    <ul><li><b>Clinicians</b> running the book's constitutional skin-case protocol.</li>
+    <li><b>Patients</b> asked to keep the daily log between visits.</li>
+    <li><b>Students and interns</b> learning the audit habit.</li></ul>
+    <h3>How it works</h3>
+    <div class="flow">
+      <div class="n"><b>1 · Record</b><span>Four fields logged per entry: History (intake), Habits, Mapping, Symptoms.</span></div>
+      <div class="n"><b>2 · Connect</b><span>The engine correlates the skin against each symptom group and the habit inputs, day by day.</span></div>
+      <div class="n"><b>3 · Read</b><span>Each of the seven organ-skin axes is scored from the book's signatures.</span></div>
+      <div class="n"><b>4 · Conclude</b><span>A plain-language conclusion states what the record does and does not support.</span></div>
+      <div class="n"><b>5 · Audit</b><span>Reviews at 30, 60 and 90 days; the record is the audit trail.</span></div>
+    </div>
+    <h3>How to use it — step by step</h3>
+    <ol>
+      <li><b>Create a case</b> (Cases → New case), or press <span class="kbd">Load demo case</span> to explore with 45 days of sample data.</li>
+      <li><b>Do the intake</b> (Intake tab): the history, the suppressed-eruption events (with the latency), the body map, a photo, the axis hypothesis and the treatment plan.</li>
+      <li><b>Log daily</b> (Daily Log): skin severity, the day's habits, and the five symptom groups. One entry a day for 30 days, then alternate days, then twice a week. Use <span class="kbd">Copy yesterday</span> to backfill a missed day.</li>
+      <li><b>Log flares</b> (Flare Log) whenever the skin flares: the 48-hour food, the cycle, stress, sleep, and any internal symptom. The tab then ranks your triggers.</li>
+      <li><b>Read the pattern</b> (Pattern &amp; Conclusions): the chart, the lead/lag view, the correlation heat-map, the axis scores (click one for its evidence), baseline-vs-current, and the conclusions.</li>
+      <li><b>Run the reviews</b> (30/60/90 Review) at each checkpoint and record the answers.</li>
+      <li><b>Export the trail</b> (Data &amp; Export): JSON (the full backup, <b>including photos</b>), CSV, a pooled research CSV, the codebook, the <b>photos as a ZIP</b> or a photo list CSV, or a printable report.</li>
+    </ol>
+    <h3>What it is for — and what it is not</h3>
+    <p><b>For:</b> turning a skin case into a structured, auditable record; surfacing the covariation between the skin and the internal organs; supporting the book's constitutional method with evidence you can review.</p>
+    <p><b>Not for:</b> diagnosis. This app records; it does not diagnose and gives no medical advice. The axis scores are a transparent, rule-based reading of your own log. The reading of the pattern is the clinician's job. If a symptom worries you, see a doctor; in an emergency, seek emergency care.</p>
+    <h3>Data, privacy and connection</h3>
+    <p>Everything is stored in your browser (localStorage) and never leaves the device. The four fields connect into the pattern engine as shown above. You can export at any time and import a JSON record back — on the same device or another. Deletions offer an <b>Undo</b> in the toast.</p>
+    <h3>Research and conclusions</h3>
+    <p>A single-case log is an <b>observational record</b>. It can describe a pattern and generate a hypothesis; it cannot prove causation. To contribute to research, export cases as JSON (or the pooled CSV) and pool them — the schema is versioned and self-describing.</p>
+    <h3>The author and the book</h3>
+    <p>The method is J. Compton Burnett's (1893), modernised by <b>${AUTHOR}</b> in <i>${BOOK}: Stop Treating the Surface</i> (${BRAND}, ${YEAR}). This app is the book's HHMS dashboard, made usable.</p>
+    <p class="sig">— ${AUTHOR}</p>
+  </div>`;
+}
+
+/* ============================== export ============================== */
+function viewExport(c){
+  const A=analyse(c);
+  return `<div class="card"><h2>Data &amp; Export</h2>
+    <p class="note">The audit trail that survives review by a third party — systematic, consistent, honest, including the worsening and not only the improvements.</p>
+    <div class="row noprint">
+      <button class="btn primary" onclick="exportCaseJSON()">Export this case (JSON)</button>
+      <button class="btn" onclick="exportCSV()">Export daily log (CSV)</button>
+      <button class="btn" onclick="exportPooledCSV()">Export pooled research CSV</button>
+      <button class="btn" onclick="exportCodebook()">Download codebook</button>
+      <button class="btn" onclick="exportPhotosZIP()">Export photos (ZIP)</button>
+      <button class="btn" onclick="exportPhotosCSV()">Export photo list (CSV)</button>
+      <button class="btn" onclick="exportJSON()">Export all cases</button>
+      <label class="btn" style="cursor:pointer">Import JSON<input type="file" accept=".json" style="display:none" onchange="importJSON(this)"></label>
+      <button class="btn gold" onclick="printReport()">Print / save as PDF</button>
+    </div>
+    <h3>Data connection</h3>
+    <div class="flow">
+      <div class="n"><b>History</b><span>${c.history.events.length} suppressed-eruption event(s)</span></div>
+      <div class="n"><b>Habits</b><span>${c.logs.length} daily input records</span></div>
+      <div class="n"><b>Mapping</b><span>${Object.keys(c.bodyMap).length} body regions · ${(c.photos||[]).length} photo(s)</span></div>
+      <div class="n"><b>Symptoms</b><span>${c.logs.length} symptom records × 5 groups</span></div>
+    </div>
+    <p class="faint" style="margin-top:8px">These four feed the pattern engine: ${A.n} entries → ${A.ranked.filter(r=>r.raw>0).length} active axis signal(s).</p>
+    <h3>Case summary</h3>
+    <table class="t"><tbody>
+      <tr><td>Case</td><td>${esc(c.name)}</td></tr>
+      <tr><td>Started</td><td>${fmt(c.start)} (day ${dayIndex(c.start)})</td></tr>
+      <tr><td>History</td><td>${esc(c.history.narrative||'—')}</td></tr>
+      <tr><td>Suppressed eruptions</td><td>${c.history.events.length?c.history.events.map(e=>`${esc(e.eruption)} → ${esc(e.complaint)}`).join('; '):'—'}</td></tr>
+      <tr><td>Body map</td><td>${regionSummary(c)}</td></tr>
+      <tr><td>Axis hypothesis</td><td>${c.axisHypothesis.axis?(AXES.find(a=>a.id===c.axisHypothesis.axis)||{}).name||c.axisHypothesis.axis:'—'}</td></tr>
+      <tr><td>Treatment plan</td><td>${esc([c.plan.remedy,c.plan.potency,c.plan.frequency,c.plan.timeline].filter(Boolean).join(' · ')||'—')}</td></tr>
+      <tr><td>Daily entries</td><td>${c.logs.length}</td></tr>
+      <tr><td>Flares logged</td><td>${c.flares.length}</td></tr>
+      <tr><td>Photos</td><td>${(c.photos||[]).length}</td></tr>
+      <tr><td>Reviews</td><td>${[30,60,90].map(d=>c.reviews?.[d]?.yes?d+'-day ✓':d+'-day ·').join(' ')} ${c.reviews?.confirm?'· confirmed':''}</td></tr>
+    </tbody></table>
+    <div class="warn" style="margin-top:12px">This app records; it does not diagnose and gives no medical advice. The reading of the pattern is the clinician's.</div>
+  </div>`;
+}
+function download(name,text,type){const b=new Blob([text],{type:type||'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),4000);}
+function exportCaseJSON(){const c=active();if(!c)return;download(`hhms-${c.name.replace(/\W+/g,'_')}.json`,JSON.stringify({app:'HHMS Skin-Case Tracker',schemaVersion:SCHEMA,author:AUTHOR,book:BOOK,exported:new Date().toISOString(),case:c},null,2));}
+function exportJSON(){download('hhms-all-cases.json',JSON.stringify({app:'HHMS Skin-Case Tracker',schemaVersion:SCHEMA,author:AUTHOR,book:BOOK,exported:new Date().toISOString(),cases:STATE.cases},null,2));}
+function exportCSV(){const c=active();if(!c)return;const head=['date','skin','location','stress','coldDrinks','alcohol','sleep','heavyFood','menstruating','medications','vaccination',...SYMPTOMS.map(s=>s[0]),'notes'];
+  const rows=c.logs.map(l=>[l.date,l.skin,l.loc,l.habits?.stress,l.habits?.coldDrinks,l.habits?.alcohol,l.habits?.sleep,l.habits?.heavyFood,l.habits?.menstruating,l.habits?.medications,l.habits?.vaccination,...SYMPTOMS.map(([k])=>l.symptoms?.[k]||0),l.notes]);
+  const csv=[head,...rows].map(r=>r.map(x=>`"${String(x==null?'':x).replace(/"/g,'""')}"`).join(',')).join('\n');
+  download(`hhms-${c.name.replace(/\W+/g,'_')}-daily.csv`,csv,'text/csv');}
+function exportPooledCSV(){
+  const head=['case_id','name','start','day','entries','mean_skin','skin_trend','flares','top_axis','inverse_covariation','r_skin_resp','r_skin_card','r_skin_dig','r_skin_men'];
+  const rows=STATE.cases.map(c=>{const A=analyse(c);const top=A.ranked.filter(r=>r.raw>0)[0];
+    return [c.id,c.name,c.start,dayIndex(c.start),A.n,A.avgSkin,A.skinTrend,c.flares.length,top?top.name:'',A.inv?1:0,
+      (A.R.skin_resp||0).toFixed(3),(A.R.skin_card||0).toFixed(3),(A.R.skin_dig||0).toFixed(3),(A.R.skin_men||0).toFixed(3)];});
+  const csv=[head,...rows].map(r=>r.map(x=>`"${String(x==null?'':x).replace(/"/g,'""')}"`).join(',')).join('\n');
+  download('hhms-pooled-research.csv',csv,'text/csv');}
+function exportCodebook(){
+  const md=`# HHMS Skin-Case Tracker — data codebook
+schemaVersion: ${SCHEMA}
+Author of the method: ${AUTHOR} (${BRAND}, ${YEAR})
+Source: "${BOOK}" (Ch. 11 & 14)
+
+## Purpose
+Observational, single-case structured record of a skin case under the HHMS dashboard. Descriptive only; not diagnostic.
+
+## Case object
+- id: local identifier
+- name: label or initials
+- created, start: ISO dates (start = day 1 of the 90-day loop)
+- meta: {sex, age, refractory}
+- history: {narrative, events[]}
+  - events[]: {eruption, agent, dateCured, complaint, onset} — the suppression audit
+- bodyMap: {regionId: 0 none | 1 present | 2 has been | 3 migrated}
+- photos[]: {id, date, note, data(data URL, downscaled)}
+- axisHypothesis: {axis (liver|spleen|heart|lung|eye|gutbrain|pelvis), notes}
+- plan: {remedy, potency, frequency, timeline}
+- logs[]: {date, skin(0-10), loc, habits{stress,coldDrinks,alcohol,sleep,heavyFood,menstruating,medications,vaccination}, symptoms{cardiac,respiratory,digestive,neurological,gynaecological}(0-10), notes}
+- flares[]: {date, time, severity, food48, cycle, stress, sleep, internal}
+- reviews: {30:{yes,notes},60:{...},90:{...}, confirm:{yes}}
+
+## Derived measures (computed, not stored)
+- Pearson r between skin and each symptom group; lagged r (gut previous day -> skin)
+- Seven organ-axis scores (rule-based, from the book's signatures)
+- inverse covariation flag: r(skin,resp)<-0.2 or r(skin,cardiac)<-0.2
+
+## Caveats
+A single case can describe a pattern; it cannot establish causation. Pool many cases for research.`;
+  download('hhms-codebook.md',md,'text/markdown');}
+/* ============================== photo export (ZIP + CSV manifest) ============================== */
+const CRC_TABLE=(function(){const t=new Uint32Array(256);for(let i=0;i<256;i++){let c=i;for(let k=0;k<8;k++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);t[i]=c>>>0;}return t;})();
+function crc32(u8){let c=0xFFFFFFFF;for(let i=0;i<u8.length;i++)c=CRC_TABLE[(c^u8[i])&0xFF]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+function dataURLtoU8(dataURL){const b64=String(dataURL).split(',')[1]||'';const bin=atob(b64);const u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);return u8;}
+function dosDateTime(d){const time=((d.getHours()<<11)|(d.getMinutes()<<5)|Math.floor(d.getSeconds()/2))&0xFFFF;const date=(((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate())&0xFFFF;return {time:time,date:date};}
+function makeZip(files){const enc=new TextEncoder();const chunks=[],central=[];let offset=0;const dt=dosDateTime(new Date());
+  files.forEach(function(f){const nameU8=enc.encode(f.name);const data=f.data;const crc=crc32(data);
+    const lh=new Uint8Array(30+nameU8.length);const lv=new DataView(lh.buffer);
+    lv.setUint32(0,0x04034b50,true);lv.setUint16(4,20,true);lv.setUint16(6,0,true);lv.setUint16(8,0,true);
+    lv.setUint16(10,dt.time,true);lv.setUint16(12,dt.date,true);lv.setUint32(14,crc,true);
+    lv.setUint32(18,data.length,true);lv.setUint32(22,data.length,true);lv.setUint16(26,nameU8.length,true);lv.setUint16(28,0,true);
+    lh.set(nameU8,30);chunks.push(lh,data);
+    const cd=new Uint8Array(46+nameU8.length);const cv=new DataView(cd.buffer);
+    cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);cv.setUint16(8,0,true);cv.setUint16(10,0,true);
+    cv.setUint16(12,dt.time,true);cv.setUint16(14,dt.date,true);cv.setUint32(16,crc,true);
+    cv.setUint32(20,data.length,true);cv.setUint32(24,data.length,true);cv.setUint16(28,nameU8.length,true);
+    cv.setUint16(30,0,true);cv.setUint16(32,0,true);cv.setUint16(34,0,true);cv.setUint16(36,0,true);cv.setUint32(38,0,true);cv.setUint32(42,offset,true);
+    cd.set(nameU8,46);central.push(cd);offset+=lh.length+data.length;});
+  const centralSize=central.reduce(function(a,c){return a+c.length;},0);
+  const end=new Uint8Array(22);const ev=new DataView(end.buffer);
+  ev.setUint32(0,0x06054b50,true);ev.setUint16(4,0,true);ev.setUint16(6,0,true);ev.setUint16(8,files.length,true);ev.setUint16(10,files.length,true);
+  ev.setUint32(12,centralSize,true);ev.setUint32(16,offset,true);ev.setUint16(20,0,true);
+  return new Blob(chunks.concat(central,[end]),{type:'application/zip'});}
+function downloadBlob(name,blob){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(function(){URL.revokeObjectURL(u);},4000);}
+function slug(s){return String(s||'case').replace(/\W+/g,'_').slice(0,40)||'case';}
+function photoExt(p){const m=String(p&&p.data||'').match(/^data:image\/([a-z0-9]+)/i);const e=(m?m[1]:'jpeg').toLowerCase();return e==='jpeg'?'jpg':e;}
+function photoFilename(c,p,i){return 'photos/'+slug(c.name)+'_'+(p.date||'nodate')+'_'+(i+1)+'.'+photoExt(p);}
+function exportPhotosZIP(){const c=active();if(!c)return;const photos=(c.photos||[]).filter(function(p){return p&&typeof p.data==='string'&&p.data.indexOf('data:image')===0;});
+  if(!photos.length){toast('No photos to export');return;}
+  const files=[];const manifest=['filename,date,note'];
+  photos.forEach(function(p,i){const fn=photoFilename(c,p,i);files.push({name:fn,data:dataURLtoU8(p.data)});
+    manifest.push('"'+fn+'","'+(p.date||'')+'","'+String(p.note||'').replace(/"/g,'""')+'"');});
+  files.push({name:'photos/manifest.csv',data:new TextEncoder().encode(manifest.join('\n'))});
+  downloadBlob('hhms-photos-'+slug(c.name)+'.zip',makeZip(files));
+  toast('Exported '+photos.length+' photo(s) as a ZIP');}
+function exportPhotosCSV(){const c=active();if(!c)return;const photos=(c.photos||[]).filter(function(p){return p&&typeof p.data==='string'&&p.data.indexOf('data:image')===0;});
+  if(!photos.length){toast('No photos to list');return;}
+  const head=['case','date','note','filename','bytes'];
+  const rows=photos.map(function(p,i){return [c.name,p.date||'',p.note||'',photoFilename(c,p,i),Math.round(p.data.length*0.75)];});
+  const csv=[head].concat(rows).map(function(r){return r.map(function(x){return '"'+String(x==null?'':x).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+  download('hhms-'+slug(c.name)+'-photos.csv',csv,'text/csv');
+  toast('Exported photo list ('+photos.length+')');}
+
+function printReport(){window.print();}
+function importJSON(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);
+  if(d.cases){STATE=migrate({schema:d.schemaVersion||1,cases:d.cases,activeId:d.activeId||d.cases[0]?.id||null,settings:STATE.settings});}
+  else if(d.case){STATE.cases.push(migrate({cases:[d.case]}).cases[0]);STATE.activeId=d.case.id;}
+  else if(d.id){STATE.cases.push(migrate({cases:[d]}).cases[0]);STATE.activeId=d.id;}
+  save();render();toast('Imported');}catch(e){toast('Could not read that file')}};r.readAsText(f);}
+
+/* ============================== tour ============================== */
+const TOUR=[
+ {tab:'dashboard',t:'The Dashboard',x:'Your case at a glance: the 90-day ring, the streak, the tiles, and the skin-vs-breathing chart. “What to do next” tells you the next step.'},
+ {tab:'cases',t:'Cases',x:'Each case is one patient and one 90-day loop. Create, search, open, or delete (with Undo).'},
+ {tab:'intake',t:'Intake (SOP)',x:'The five-step intake from the book: history, dashboard setup, body map (with photos), axis hypothesis, treatment plan.'},
+ {tab:'log',t:'Daily Log',x:'One entry a day: skin, habits, and the five symptom groups. Use “Copy yesterday” to backfill a missed day.'},
+ {tab:'flare',t:'Flare Log',x:'When the skin flares, record the 48-hour food, cycle, stress and sleep. The tab then ranks your triggers.'},
+ {tab:'pattern',t:'Pattern & Conclusions',x:'The reading: charts, the lead/lag view, the correlation heat-map, the seven axis scores, and the plain-language conclusion.'},
+ {tab:'export',t:'Data & Export',x:'Export JSON, CSV, a pooled research CSV, the codebook, or a printable report. All data stays on your device.'}
+];
+let TOUR_I=0;
+function startTour(i){TOUR_I=i||0;if(!TOUR[TOUR_I]){endTour();return;}const s=TOUR[TOUR_I];if(s.tab)setTab(s.tab);renderTour();}
+function renderTour(){const s=TOUR[TOUR_I];if(!s)return;document.getElementById('tourBox').innerHTML=
+  `<div class="step">Step ${TOUR_I+1} of ${TOUR.length}</div><h3>${esc(s.t)}</h3><p>${esc(s.x)}</p>
+   <div class="actions row" style="justify-content:flex-end;margin-top:16px"><button class="btn" onclick="endTour()">Skip</button>
+   ${TOUR_I>0?'<button class="btn" onclick="startTour('+(TOUR_I-1)+')">Back</button>':''}
+   <button class="btn primary" onclick="${TOUR_I<TOUR.length-1?'startTour('+(TOUR_I+1)+')':'endTour()'}">${TOUR_I<TOUR.length-1?'Next':'Finish'}</button></div>`;
+  document.getElementById('tour').classList.add('on');}
+function endTour(){document.getElementById('tour').classList.remove('on');STATE.settings.tour=true;save();}
+
+/* ============================== self-tests ============================== */
+function runSelfTests(){const out=[];const t=(n,f)=>{try{f();out.push(['pass',n,'']);}catch(e){out.push(['fail',n,e.message]);}};
+  t('blankCase has all fields',()=>{const c=blankCase('x');['photos','logs','flares','reviews','history','bodyMap','meta','plan','axisHypothesis'].forEach(k=>{if(!(k in c))throw new Error('missing '+k);});});
+  t('dayIndex(today) = 1',()=>{const c=blankCase('x');if(dayIndex(c.start)!==1)throw new Error('got '+dayIndex(c.start));});
+  t('pearson detects inverse',()=>{if(pearson([1,2,3,4,5],[5,4,3,2,1])>-0.9)throw new Error('bad r');});
+  t('redFlags catches a seizure',()=>{const f=redFlags({notes:'had a seizure last night',symptoms:{}});if(f.indexOf('a seizure')<0)throw new Error('missed');});
+  t('redFlags clean entry',()=>{const f=redFlags({notes:'skin calm today',symptoms:{cardiac:2}});if(f.length)throw new Error('false positive');});
+  t('redFlags: "benefit" is not a seizure',()=>{const f=redFlags({notes:'I feel the benefit today',symptoms:{}});if(f.length)throw new Error('false positive: '+f.join(','));});
+  t('local today is ISO-shaped',()=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(todayISO()))throw new Error(todayISO());});
+  t('migrate sanitises a hostile id',()=>{const s=migrate({cases:[{id:"x');alert(1);//",name:'a',start:'bad'}]});if(!/^[A-Za-z0-9_-]+$/.test(s.cases[0].id))throw new Error('id: '+s.cases[0].id);if(!ISO_RE.test(s.cases[0].start))throw new Error('start');});
+  t('migrate drops bad log dates',()=>{const s=migrate({cases:[{id:'a',name:'x',logs:[{date:'nope'},{date:'2026-01-01'}]}]});if(s.cases[0].logs.length!==1)throw new Error('kept '+s.cases[0].logs.length);});
+  t('migrate survives a non-object',()=>{const s=migrate(null);if(!Array.isArray(s.cases))throw new Error('no cases');});
+  t('analyse(null) is safe',()=>{if(analyse(null).n!==0)throw new Error('bad');});
+  t('esc escapes quotes',()=>{const v=esc(`"<x>'`);if(v!=='&quot;&lt;x&gt;&#39;')throw new Error(v);});
+  t('crc32 known vector',()=>{if(crc32(new TextEncoder().encode('123456789'))!==0xCBF43926)throw new Error('crc');});
+  t('dataURL to bytes',()=>{const u8=dataURLtoU8('data:image/png;base64,AAEC');if(u8.length!==3||u8[2]!==2)throw new Error('bad');});
+  t('makeZip returns a Blob',()=>{const z=makeZip([{name:'a.txt',data:new TextEncoder().encode('hi')}]);if(!(z instanceof Blob)||z.size<30)throw new Error('bad zip');});
+  t('photo filename is safe',()=>{const c=blankCase('A/B: case');const fn=photoFilename(c,{date:'2026-01-02',data:'data:image/png;base64,AA'},0);if(fn.indexOf('/')!==fn.lastIndexOf('/')||!/\.png$/.test(fn))throw new Error(fn);});
+  t('streak counts consecutive',()=>{const c=blankCase('x');c.logs=[{date:dayISO(0)},{date:dayISO(-1)},{date:dayISO(-2)}];if(streak(c)!==3)throw new Error('got '+streak(c));});
+  t('demo: 45 entries, ranks lung/liver',()=>{const before=JSON.stringify(STATE);seedDemo();const c=active();const A=analyse(c);if(A.n!==45)throw new Error('n='+A.n);if(!A.inv)throw new Error('no inverse');if(A.ranked[0].raw<=0)throw new Error('no axis');STATE=JSON.parse(before);});
+  t('baselineCompare needs 10 entries',()=>{const c=blankCase('x');if(baselineCompare(c)!==null)throw new Error('should be null');});
+  t('flareAnalysis counts triggers',()=>{const c=blankCase('x');c.flares=[{food48:'dairy, fried'},{food48:'dairy'}];const F=flareAnalysis(c);if(F.foodRank[0][0]!=='dairy'||F.foodRank[0][1]!==2)throw new Error('bad rank');});
+  t('migrate adds photos field',()=>{const s=migrate({cases:[{id:'a',name:'x'}]});if(!s.cases[0].photos)throw new Error('no photos');if(s.schema!==SCHEMA)throw new Error('no schema');});
+  return out;}
+function showSelfTests(){const r=runSelfTests();const pass=r.filter(x=>x[0]==='pass').length;
+  showModal('<h3>Self-tests</h3><p>'+pass+' of '+r.length+' passed.</p><table class="t"><tbody>'+
+    r.map(([st,n,m])=>`<tr><td>${st==='pass'?'<span class="pill green">pass</span>':'<span class="pill red">fail</span>'}</td><td>${esc(n)}</td><td class="muted">${esc(m)}</td></tr>`).join('')+'</tbody></table>');}
+
+/* ============================== boot ============================== */
+load();
+if(location.hash.indexOf('demo')>=0 && !STATE.cases.length)seedDemo();
+const hm=location.hash.match(/tab=(\w+)/); if(hm&&TABS.some(t=>t[0]===hm[1]))TAB=hm[1];
+if(STATE.cases.length&&!STATE.activeId)STATE.activeId=STATE.cases[0].id;
+render();
+maybeNotify();
+if(location.hash.indexOf('selftest')>=0)setTimeout(showSelfTests,300);
+if(!STATE.settings.tour && !STATE.cases.length)setTimeout(()=>startTour(0),400);
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
