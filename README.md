@@ -38,10 +38,8 @@ The companion app to the book <em>The Skin Is a Liar</em> by Dr. Sohil Momin. It
 <p>
 <a href="#-licence"><img src="docs/badges/license.svg" alt="License: free to use"></a>
 <a href="#-licence"><img src="docs/badges/copyright.svg" alt="Copyright: all rights reserved"></a>
-<a href="https://drsamonline.github.io/skin-case-tracker/play/"><img src="docs/badges/pwa.svg" alt="PWA: installable and offline"></a>
 <a href="#-privacy"><img src="docs/badges/privacy.svg" alt="Privacy: data stays on your device"></a>
 <img src="docs/badges/version.svg" alt="Version 7.0">
-<a href="https://github.com/drsamonline"><img src="docs/badges/author.svg" alt="By Dr. Sohil Momin"></a>
 </p>
 
 <p>
