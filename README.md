@@ -17,7 +17,7 @@ The companion app to the book <em>The Skin Is a Liar</em> by Dr. Sohil Momin. It
 <p>
 <a href="https://drsamonline.github.io/skin-case-tracker/"><strong>Landing page</strong></a> &nbsp;·&nbsp;
 <a href="https://drsamonline.github.io/skin-case-tracker/play/"><strong>Open the live app</strong></a> &nbsp;·&nbsp;<a href="https://github.com/drsamonline/skin-case-tracker/releases/latest/download/skin-case-tracker-portable.exe"><strong>Download for Windows (.exe)</strong></a> &nbsp;·&nbsp; <a href="https://github.com/drsamonline/skin-case-tracker/releases/latest/download/skin-case-tracker.apk"><strong>Download for Android (.apk)</strong></a>
-<a href="https://github.com/drsamonline/skin-case-tracker"><strong>Star this repo</strong></a>
+<a href="https://github.com/drsamonline/skin-case-tracker"><strong>Star this repo</strong></a> &nbsp;·&nbsp;<a href="https://drsamonline.github.io/"><strong>All projects</strong></a>
 </p>
 
 </div>
