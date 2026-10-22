@@ -6,19 +6,13 @@
 The companion app to the book <em>The Skin Is a Liar</em> by Dr. Sohil Momin. It records; it does not diagnose.</p>
 
 <p>
-<a href="https://drsamonline.github.io/skin-case-tracker/"><img src="https://img.shields.io/badge/landing%20page-open-2e7d32?style=flat-square" alt="Landing page" onerror="this.style.display='none'"></a>
-<a href="https://drsamonline.github.io/"><img src="https://img.shields.io/badge/All%20projects-hub-2e7d32?style=flat-square" alt="All projects" onerror="this.style.display='none'"></a>
-<a href="LICENSE"><img src="https://img.shields.io/badge/licence-personal%20%26%20clinical%20use-orange?style=flat-square" alt="Licence: free for personal and clinical use" onerror="this.style.display='none'"></a>
-<a href="https://github.com/drsamonline/skin-case-tracker/releases/latest"><img src="https://img.shields.io/badge/download-releases-2e7d32?style=flat-square" alt="Download" onerror="this.style.display='none'"></a>
-</p>
-
-<p>
 <a href="https://drsamonline.github.io/skin-case-tracker/"><img src="docs/badges/live-demo.svg" alt="Landing page" onerror="this.style.display='none'"></a>
 <a href="https://drsamonline.github.io/skin-case-tracker/play/"><img src="docs/badges/pwa.svg" alt="PWA: installable and offline" onerror="this.style.display='none'"></a>
 <a href="#-privacy"><img src="docs/badges/privacy.svg" alt="Privacy: data stays on your device" onerror="this.style.display='none'"></a>
-<img src="docs/badges/version.svg" alt="Version 7.0" onerror="this.style.display='none'">
 <a href="#-licence"><img src="docs/badges/license.svg" alt="License: free to use" onerror="this.style.display='none'"></a>
 <a href="https://github.com/drsamonline"><img src="docs/badges/author.svg" alt="By Dr. Sohil Momin" onerror="this.style.display='none'"></a>
+<a href="https://drsamonline.github.io/"><img src="docs/badges/all-projects.svg" alt="All projects" onerror="this.style.display='none'"></a>
+<a href="https://github.com/drsamonline/skin-case-tracker/releases/latest"><img src="docs/badges/download.svg" alt="Download" onerror="this.style.display='none'"></a>
 </p>
 
 <p>
