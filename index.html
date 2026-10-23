@@ -180,6 +180,7 @@ summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--accent-d)}
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()"><div class="modal" id="modalBox"></div></div>
 <div class="toast" id="toast"></div>
 <div id="tour"><div class="tourcard" id="tourBox"></div></div>
+<script src="web-kit.js"></script>
 <script>
 /* =====================================================================
    HHMS Skin-Case Tracker — single-file app (Win10 square theme)
@@ -910,19 +911,20 @@ function viewExport(c){
   </div>`;
 }
 function download(name,text,type){const b=new Blob([text],{type:type||'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),4000);}
+function csvText(head,rows){if(!rows.length)return head.join(',');return Loom.csv.toCSV(rows.map(function(r){var o={};head.forEach(function(h,i){o[h]=r[i];});return o;}));}
 function exportCaseJSON(){const c=active();if(!c)return;download(`hhms-${c.name.replace(/\W+/g,'_')}.json`,JSON.stringify({app:'HHMS Skin-Case Tracker',schemaVersion:SCHEMA,author:AUTHOR,book:BOOK,exported:new Date().toISOString(),case:c},null,2));}
 function exportJSON(){download('hhms-all-cases.json',JSON.stringify({app:'HHMS Skin-Case Tracker',schemaVersion:SCHEMA,author:AUTHOR,book:BOOK,exported:new Date().toISOString(),cases:STATE.cases},null,2));}
 function exportCSV(){const c=active();if(!c)return;const head=['date','skin','location','stress','coldDrinks','alcohol','sleep','heavyFood','menstruating','medications','vaccination',...SYMPTOMS.map(s=>s[0]),'notes'];
   const rows=c.logs.map(l=>[l.date,l.skin,l.loc,l.habits?.stress,l.habits?.coldDrinks,l.habits?.alcohol,l.habits?.sleep,l.habits?.heavyFood,l.habits?.menstruating,l.habits?.medications,l.habits?.vaccination,...SYMPTOMS.map(([k])=>l.symptoms?.[k]||0),l.notes]);
-  const csv=[head,...rows].map(r=>r.map(x=>`"${String(x==null?'':x).replace(/"/g,'""')}"`).join(',')).join('\n');
-  download(`hhms-${c.name.replace(/\W+/g,'_')}-daily.csv`,csv,'text/csv');}
+  const csv=csvText(head,rows);
+  Loom.csv.download(`hhms-${c.name.replace(/\W+/g,'_')}-daily.csv`,csv);}
 function exportPooledCSV(){
   const head=['case_id','name','start','day','entries','mean_skin','skin_trend','flares','top_axis','inverse_covariation','r_skin_resp','r_skin_card','r_skin_dig','r_skin_men'];
   const rows=STATE.cases.map(c=>{const A=analyse(c);const top=A.ranked.filter(r=>r.raw>0)[0];
     return [c.id,c.name,c.start,dayIndex(c.start),A.n,A.avgSkin,A.skinTrend,c.flares.length,top?top.name:'',A.inv?1:0,
       (A.R.skin_resp||0).toFixed(3),(A.R.skin_card||0).toFixed(3),(A.R.skin_dig||0).toFixed(3),(A.R.skin_men||0).toFixed(3)];});
-  const csv=[head,...rows].map(r=>r.map(x=>`"${String(x==null?'':x).replace(/"/g,'""')}"`).join(',')).join('\n');
-  download('hhms-pooled-research.csv',csv,'text/csv');}
+  const csv=csvText(head,rows);
+  Loom.csv.download('hhms-pooled-research.csv',csv);}
 function exportCodebook(){
   const md=`# HHMS Skin-Case Tracker — data codebook
 schemaVersion: ${SCHEMA}
@@ -994,8 +996,8 @@ function exportPhotosCSV(){const c=active();if(!c)return;const photos=(c.photos|
   if(!photos.length){toast('No photos to list');return;}
   const head=['case','date','note','filename','bytes'];
   const rows=photos.map(function(p,i){return [c.name,p.date||'',p.note||'',photoFilename(c,p,i),Math.round(p.data.length*0.75)];});
-  const csv=[head].concat(rows).map(function(r){return r.map(function(x){return '"'+String(x==null?'':x).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
-  download('hhms-'+slug(c.name)+'-photos.csv',csv,'text/csv');
+  const csv=csvText(head,rows);
+  Loom.csv.download('hhms-'+slug(c.name)+'-photos.csv',csv);
   toast('Exported photo list ('+photos.length+')');}
 
 function printReport(){window.print();}
@@ -1048,6 +1050,8 @@ function runSelfTests(){const out=[];const t=(n,f)=>{try{f();out.push(['pass',n,
   t('baselineCompare needs 10 entries',()=>{const c=blankCase('x');if(baselineCompare(c)!==null)throw new Error('should be null');});
   t('flareAnalysis counts triggers',()=>{const c=blankCase('x');c.flares=[{food48:'dairy, fried'},{food48:'dairy'}];const F=flareAnalysis(c);if(F.foodRank[0][0]!=='dairy'||F.foodRank[0][1]!==2)throw new Error('bad rank');});
   t('migrate adds photos field',()=>{const s=migrate({cases:[{id:'a',name:'x'}]});if(!s.cases[0].photos)throw new Error('no photos');if(s.schema!==SCHEMA)throw new Error('no schema');});
+  t('csv: header + rows round-trip via web-kit',()=>{const head=['a','b'];const rows=[['1','x,y'],['2','q"z']];const back=Loom.csv.fromCSV(csvText(head,rows));if(back.length!==2||back[0].a!=='1'||back[0].b!=='x,y'||back[1].b!=='q"z')throw new Error(JSON.stringify(back));});
+  t('csv: header-only when there are no rows',()=>{if(csvText(['a','b'],[])!=='a,b')throw new Error('bad');});
   return out;}
 function showSelfTests(){const r=runSelfTests();const pass=r.filter(x=>x[0]==='pass').length;
   showModal('<h3>Self-tests</h3><p>'+pass+' of '+r.length+' passed.</p><table class="t"><tbody>'+
