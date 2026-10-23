@@ -181,6 +181,7 @@ summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--accent-d)}
 <div class="toast" id="toast"></div>
 <div id="tour"><div class="tourcard" id="tourBox"></div></div>
 <script src="web-kit.js"></script>
+<script src="export-kit.js"></script>
 <script>
 /* =====================================================================
    HHMS Skin-Case Tracker — single-file app (Win10 square theme)
@@ -910,7 +911,7 @@ function viewExport(c){
     <div class="warn" style="margin-top:12px">This app records; it does not diagnose and gives no medical advice. The reading of the pattern is the clinician's.</div>
   </div>`;
 }
-function download(name,text,type){const b=new Blob([text],{type:type||'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),4000);}
+function download(name,text,type){return Export.save(name,text,type||'application/json');}
 function csvText(head,rows){if(!rows.length)return head.join(',');return Loom.csv.toCSV(rows.map(function(r){var o={};head.forEach(function(h,i){o[h]=r[i];});return o;}));}
 function exportCaseJSON(){const c=active();if(!c)return;download(`hhms-${c.name.replace(/\W+/g,'_')}.json`,JSON.stringify({app:'HHMS Skin-Case Tracker',schemaVersion:SCHEMA,author:AUTHOR,book:BOOK,exported:new Date().toISOString(),case:c},null,2));}
 function exportJSON(){download('hhms-all-cases.json',JSON.stringify({app:'HHMS Skin-Case Tracker',schemaVersion:SCHEMA,author:AUTHOR,book:BOOK,exported:new Date().toISOString(),cases:STATE.cases},null,2));}
@@ -958,29 +959,10 @@ Observational, single-case structured record of a skin case under the HHMS dashb
 A single case can describe a pattern; it cannot establish causation. Pool many cases for research.`;
   download('hhms-codebook.md',md,'text/markdown');}
 /* ============================== photo export (ZIP + CSV manifest) ============================== */
-const CRC_TABLE=(function(){const t=new Uint32Array(256);for(let i=0;i<256;i++){let c=i;for(let k=0;k<8;k++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);t[i]=c>>>0;}return t;})();
-function crc32(u8){let c=0xFFFFFFFF;for(let i=0;i<u8.length;i++)c=CRC_TABLE[(c^u8[i])&0xFF]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+function crc32(u8){return Export.crc32(u8);}
 function dataURLtoU8(dataURL){const b64=String(dataURL).split(',')[1]||'';const bin=atob(b64);const u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);return u8;}
-function dosDateTime(d){const time=((d.getHours()<<11)|(d.getMinutes()<<5)|Math.floor(d.getSeconds()/2))&0xFFFF;const date=(((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate())&0xFFFF;return {time:time,date:date};}
-function makeZip(files){const enc=new TextEncoder();const chunks=[],central=[];let offset=0;const dt=dosDateTime(new Date());
-  files.forEach(function(f){const nameU8=enc.encode(f.name);const data=f.data;const crc=crc32(data);
-    const lh=new Uint8Array(30+nameU8.length);const lv=new DataView(lh.buffer);
-    lv.setUint32(0,0x04034b50,true);lv.setUint16(4,20,true);lv.setUint16(6,0,true);lv.setUint16(8,0,true);
-    lv.setUint16(10,dt.time,true);lv.setUint16(12,dt.date,true);lv.setUint32(14,crc,true);
-    lv.setUint32(18,data.length,true);lv.setUint32(22,data.length,true);lv.setUint16(26,nameU8.length,true);lv.setUint16(28,0,true);
-    lh.set(nameU8,30);chunks.push(lh,data);
-    const cd=new Uint8Array(46+nameU8.length);const cv=new DataView(cd.buffer);
-    cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);cv.setUint16(8,0,true);cv.setUint16(10,0,true);
-    cv.setUint16(12,dt.time,true);cv.setUint16(14,dt.date,true);cv.setUint32(16,crc,true);
-    cv.setUint32(20,data.length,true);cv.setUint32(24,data.length,true);cv.setUint16(28,nameU8.length,true);
-    cv.setUint16(30,0,true);cv.setUint16(32,0,true);cv.setUint16(34,0,true);cv.setUint16(36,0,true);cv.setUint32(38,0,true);cv.setUint32(42,offset,true);
-    cd.set(nameU8,46);central.push(cd);offset+=lh.length+data.length;});
-  const centralSize=central.reduce(function(a,c){return a+c.length;},0);
-  const end=new Uint8Array(22);const ev=new DataView(end.buffer);
-  ev.setUint32(0,0x06054b50,true);ev.setUint16(4,0,true);ev.setUint16(6,0,true);ev.setUint16(8,files.length,true);ev.setUint16(10,files.length,true);
-  ev.setUint32(12,centralSize,true);ev.setUint32(16,offset,true);ev.setUint16(20,0,true);
-  return new Blob(chunks.concat(central,[end]),{type:'application/zip'});}
-function downloadBlob(name,blob){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(function(){URL.revokeObjectURL(u);},4000);}
+function makeZip(files){return new Blob([Export.zip(files)],{type:'application/zip'});}
+function downloadBlob(name,blob){return Export.save(name,blob,'application/zip');}
 function slug(s){return String(s||'case').replace(/\W+/g,'_').slice(0,40)||'case';}
 function photoExt(p){const m=String(p&&p.data||'').match(/^data:image\/([a-z0-9]+)/i);const e=(m?m[1]:'jpeg').toLowerCase();return e==='jpeg'?'jpg':e;}
 function photoFilename(c,p,i){return 'photos/'+slug(c.name)+'_'+(p.date||'nodate')+'_'+(i+1)+'.'+photoExt(p);}
