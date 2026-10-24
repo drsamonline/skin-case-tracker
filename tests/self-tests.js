@@ -14,6 +14,8 @@ const file = process.argv[2] || path.join(root, 'index.html');
 const html = fs.readFileSync(file, 'utf8');
 const wkPath = path.join(path.dirname(file), 'web-kit.js');
 const wk = fs.existsSync(wkPath) ? fs.readFileSync(wkPath, 'utf8') : '';
+const xkPath = path.join(path.dirname(file), 'export-kit.js');
+const xk = fs.existsSync(xkPath) ? fs.readFileSync(xkPath, 'utf8') : '';
 
 const inline = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
 const htmlNoScripts = html.replace(/<script[\s\S]*?<\/script>/g, '');
@@ -21,6 +23,7 @@ const htmlNoScripts = html.replace(/<script[\s\S]*?<\/script>/g, '');
 const w = new Window({ url: 'https://local.test/' });
 w.document.write(htmlNoScripts);
 if (wk) w.eval(wk);
+if (xk) w.eval(xk);
 for (const s of inline) w.eval(s);
 
 let out;
