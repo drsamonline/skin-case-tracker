@@ -961,8 +961,6 @@ A single case can describe a pattern; it cannot establish causation. Pool many c
 /* ============================== photo export (ZIP + CSV manifest) ============================== */
 function crc32(u8){return Export.crc32(u8);}
 function dataURLtoU8(dataURL){const b64=String(dataURL).split(',')[1]||'';const bin=atob(b64);const u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);return u8;}
-function makeZip(files){return new Blob([Export.zip(files)],{type:'application/zip'});}
-function downloadBlob(name,blob){return Export.save(name,blob,'application/zip');}
 function slug(s){return String(s||'case').replace(/\W+/g,'_').slice(0,40)||'case';}
 function photoExt(p){const m=String(p&&p.data||'').match(/^data:image\/([a-z0-9]+)/i);const e=(m?m[1]:'jpeg').toLowerCase();return e==='jpeg'?'jpg':e;}
 function photoFilename(c,p,i){return 'photos/'+slug(c.name)+'_'+(p.date||'nodate')+'_'+(i+1)+'.'+photoExt(p);}
@@ -972,7 +970,7 @@ function exportPhotosZIP(){const c=active();if(!c)return;const photos=(c.photos|
   photos.forEach(function(p,i){const fn=photoFilename(c,p,i);files.push({name:fn,data:dataURLtoU8(p.data)});
     manifest.push('"'+fn+'","'+(p.date||'')+'","'+String(p.note||'').replace(/"/g,'""')+'"');});
   files.push({name:'photos/manifest.csv',data:new TextEncoder().encode(manifest.join('\n'))});
-  downloadBlob('hhms-photos-'+slug(c.name)+'.zip',makeZip(files));
+  Export.saveZip('hhms-photos-'+slug(c.name)+'.zip',files);   // export-kit: zip + save in one call
   toast('Exported '+photos.length+' photo(s) as a ZIP');}
 function exportPhotosCSV(){const c=active();if(!c)return;const photos=(c.photos||[]).filter(function(p){return p&&typeof p.data==='string'&&p.data.indexOf('data:image')===0;});
   if(!photos.length){toast('No photos to list');return;}
@@ -1025,7 +1023,7 @@ function runSelfTests(){const out=[];const t=(n,f)=>{try{f();out.push(['pass',n,
   t('esc escapes quotes',()=>{const v=esc(`"<x>'`);if(v!=='&quot;&lt;x&gt;&#39;')throw new Error(v);});
   t('crc32 known vector',()=>{if(crc32(new TextEncoder().encode('123456789'))!==0xCBF43926)throw new Error('crc');});
   t('dataURL to bytes',()=>{const u8=dataURLtoU8('data:image/png;base64,AAEC');if(u8.length!==3||u8[2]!==2)throw new Error('bad');});
-  t('makeZip returns a Blob',()=>{const z=makeZip([{name:'a.txt',data:new TextEncoder().encode('hi')}]);if(!(z instanceof Blob)||z.size<30)throw new Error('bad zip');});
+  t('the kit builds the zip (Export.zip)',()=>{const z=Export.zip([{name:'a.txt',data:new TextEncoder().encode('hi')}]);if(!(z instanceof Uint8Array)||z.length<30)throw new Error('bad zip');});
   t('photo filename is safe',()=>{const c=blankCase('A/B: case');const fn=photoFilename(c,{date:'2026-01-02',data:'data:image/png;base64,AA'},0);if(fn.indexOf('/')!==fn.lastIndexOf('/')||!/\.png$/.test(fn))throw new Error(fn);});
   t('streak counts consecutive',()=>{const c=blankCase('x');c.logs=[{date:dayISO(0)},{date:dayISO(-1)},{date:dayISO(-2)}];if(streak(c)!==3)throw new Error('got '+streak(c));});
   t('demo: 45 entries, ranks lung/liver',()=>{const before=JSON.stringify(STATE);seedDemo();const c=active();const A=analyse(c);if(A.n!==45)throw new Error('n='+A.n);if(!A.inv)throw new Error('no inverse');if(A.ranked[0].raw<=0)throw new Error('no axis');STATE=JSON.parse(before);});
