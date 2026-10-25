@@ -92,7 +92,7 @@ summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--accent-d)}
 .danger{background:#fbe9e9;border:1px solid #e0b3b3;padding:12px 14px;font-size:13.5px;color:#7a1c1c}
 .info{background:var(--accent-l);border:1px solid var(--accent-b);padding:11px 13px;font-size:13.5px;color:#204a33}
 .bodywrap{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
-.bodywrap svg{width:230px;height:auto;background:var(--pane2);border:1px solid var(--line)}
+.bodywrap svg{max-width:230px;width:100%;height:auto;background:var(--pane2);border:1px solid var(--line)}
 .hot{cursor:pointer}
 .legend{font-size:12px;color:var(--soft)}
 .tag{display:inline-block;width:11px;height:11px;vertical-align:middle;margin-right:5px;border:1px solid rgba(0,0,0,.15)}
@@ -112,7 +112,7 @@ summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--accent-d)}
 .heat{display:grid;gap:2px;font-size:10px;width:100%}
 .heat .cell{min-height:36px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;cursor:default;font-size:10px}
 .heat .hcell{color:var(--soft);font-size:9.5px;display:flex;align-items:flex-end;justify-content:center;text-align:center;padding-bottom:3px}
-.ringwrap{position:relative;width:160px;height:160px}
+.ringwrap{position:relative;max-width:160px;width:100%;height:160px}
 .ringwrap .mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 .ringwrap .mid b{font-size:32px;color:var(--accent-d);line-height:1}
 .ringwrap .mid span{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint)}
@@ -410,7 +410,7 @@ function ringSVG(pct,label,sub){
 }
 function sparkSVG(data,color){const W=120,H=28,n=data.length;if(n<2)return '';const X=i=>i*(W-2)/(n-1)+1,Y=v=>H-2-(Math.max(0,Math.min(10,v))/10)*(H-4);
   const pts=data.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
-  return `<svg viewBox="0 0 ${W} ${H}" style="width:120px;height:28px"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.8"/></svg>`;}
+  return `<svg viewBox="0 0 ${W} ${H}" style="max-width:120px;width:100%;height:28px"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.8"/></svg>`;}
 
 /* ============================== analysis ============================== */
 function redFlags(e){const t=((e.notes||'')+' '+(e.loc||'')).toLowerCase();const f=[];
@@ -577,7 +577,7 @@ function viewCases(){
       <button class="btn" onclick="loadDemo()">Load demo case (45 days)</button>
       <button class="btn" onclick="exportJSON()">Export all (JSON)</button>
       <label class="btn" style="cursor:pointer">Import JSON<input type="file" accept=".json" style="display:none" onchange="importJSON(this)"></label>
-      <input type="search" id="caseSearch" placeholder="Search cases…" oninput="filterCases(this.value)" style="width:200px" aria-label="Search cases"></div>
+      <input type="search" id="caseSearch" placeholder="Search cases…" oninput="filterCases(this.value)" style="max-width:200px;width:100%" aria-label="Search cases"></div>
     <h3>All cases (<span id="caseCount">${STATE.cases.length}</span>)</h3>
     <div id="casesTable">${caseTableHTML('')}</div>
   </div>`;
@@ -676,10 +676,10 @@ function viewLog(c){const day=dayIndex(c.start),cad=cadenceFor(day);
 function symptomMini(l){return SYMPTOMS.map(([k])=>`${k.slice(0,4)} ${l.symptoms?.[k]||0}`).join(' · ');}
 function logForm(c,e,d){const h=e?e.habits:{stress:0,coldDrinks:0,alcohol:0,sleep:7,heavyFood:false,menstruating:false,medications:'',vaccination:''};
   const sy=e?e.symptoms:{cardiac:0,respiratory:0,digestive:0,neurological:0,gynaecological:0};const skin=e?e.skin:0,loc=e?e.loc:'';
-  const sl=(id,label,val)=>`<div class="slider"><span style="width:180px" class="muted">${label}</span><input type="range" min="0" max="10" value="${val}" id="${id}" aria-label="${esc(label)}" oninput="document.getElementById('${id}v').textContent=this.value"><span class="val" id="${id}v">${val}</span></div>`;
+  const sl=(id,label,val)=>`<div class="slider"><span style="max-width:180px;width:100%" class="muted">${label}</span><input type="range" min="0" max="10" value="${val}" id="${id}" aria-label="${esc(label)}" oninput="document.getElementById('${id}v').textContent=this.value"><span class="val" id="${id}v">${val}</span></div>`;
   return `<div class="grid g2">
     <div><h3>Mapping</h3>
-      <div class="slider"><span style="width:180px" class="muted">Skin severity (0–10)</span><input type="range" min="0" max="10" value="${skin}" id="f_skin" aria-label="Skin severity" oninput="document.getElementById('f_skinv').textContent=this.value"><span class="val" id="f_skinv">${skin}</span></div>
+      <div class="slider"><span style="max-width:180px;width:100%" class="muted">Skin severity (0–10)</span><input type="range" min="0" max="10" value="${skin}" id="f_skin" aria-label="Skin severity" oninput="document.getElementById('f_skinv').textContent=this.value"><span class="val" id="f_skinv">${skin}</span></div>
       <label class="f">Skin location today</label><input type="text" id="f_loc" value="${esc(loc)}" placeholder="e.g. elbows, scalp">
       <p class="muted">Marked regions: ${regionSummary(c)}</p>
       <h3>Habits</h3>${sl('f_stress','Stress (0–10)',h.stress)}
@@ -1137,6 +1137,31 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigato
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", add); else add();
 })();
+</script>
+
+<script>
+/* A SMOKE TEST, not a feature test: did the page come up, are the kits loaded, does storage work.
+   Open with ?test to see it. */
+window.__smokeTest = function () {
+  var out = [];
+  function ok(n, c) { out.push((c ? "PASS " : "FAIL ") + n); }
+  ok("the document rendered", !!document.body && document.body.children.length > 0);
+  ok("a heading is present", !!document.querySelector("h1, h2"));
+  ok("no script threw during load", !window.__bootError);
+  var kits = ["Export","Loom","CryptoKit","Case","Search","Srs","Game","Art","Audio","Ml","UI","Lan","Astro"];
+  var found = kits.filter(function (k) { return window[k]; });
+  ok("at least one kit is loaded (" + (found.join(", ") || "none") + ")", found.length > 0);
+  try { localStorage.setItem("__smoke","1"); ok("storage works", localStorage.getItem("__smoke") === "1"); localStorage.removeItem("__smoke"); }
+  catch (e) { ok("storage works", false); }
+  console.log(out.join("\n"));
+  if (location.search.indexOf("test") >= 0) {
+    var d = document.createElement("pre"); d.textContent = out.join("\n");
+    d.style.cssText = "position:fixed;left:0;right:0;bottom:0;background:#111;color:#eee;padding:12px;font:12px ui-monospace,monospace;z-index:99999;max-height:40vh;overflow:auto;white-space:pre-wrap";
+    document.body.appendChild(d);
+  }
+  return out;
+};
+window.addEventListener("error", function () { window.__bootError = true; });
 </script>
 </body>
 </html>
