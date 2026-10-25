@@ -1,3 +1,10 @@
+
+
+<!-- shot:start -->
+
+![Screenshot](docs/shot.png)
+
+<!-- shot:end -->
 <div align="center">
 
 <h1>HHMS Skin-Case Tracker</h1>
