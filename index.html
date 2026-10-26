@@ -255,7 +255,7 @@ let STATE={schema:SCHEMA,cases:[],activeId:null,settings:{reminders:false,tour:f
 let _saveT=null;
 function save(){if(_saveT)clearTimeout(_saveT);_saveT=setTimeout(saveNow,300);}
 let _quotaWarned=false;
-function saveNow(){if(_saveT){clearTimeout(_saveT);_saveT=null;}try{localStorage.setItem(LS,JSON.stringify(STATE))}catch(e){console.warn(e);if(!_quotaWarned){_quotaWarned=true;try{toast('Storage full — export your data to free space');}catch(_){}}}}
+function saveNow(){if(_saveT){clearTimeout(_saveT);_saveT=null;}try{Loom.storage.set('state',STATE)}catch(e){console.warn(e);if(!_quotaWarned){_quotaWarned=true;try{toast('Storage full — export your data to free space');}catch(_){}}}}
 window.addEventListener('beforeunload',saveNow);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveNow();});
 function safeId(id,seen){if(typeof id!=='string'||!/^[A-Za-z0-9_-]{1,40}$/.test(id)||seen.has(id))id=uid();seen.add(id);return id;}
@@ -289,8 +289,14 @@ function migrate(s){
   if(s.activeId&&!s.cases.some(c=>c.id===s.activeId))s.activeId=s.cases[0]?s.cases[0].id:null;
   s.schema=SCHEMA;return s;
 }
-function load(){try{const s=localStorage.getItem(LS);if(s){STATE=migrate(JSON.parse(s));return;}
-  const o=localStorage.getItem(LSOLD)||localStorage.getItem(LSOLD2);if(o){STATE=migrate(JSON.parse(o));save();}}catch(e){}}
+function load(){try{
+  /* RETROFIT: the case data now goes through web-kit's Loom.storage, which is
+     namespaced and JSON-safe. The raw keys below are kept as the MIGRATION SOURCE,
+     not as the store: anyone who used this before the retrofit keeps their cases,
+     and the order is newest-first (v3, then v2, then v1). */
+  const s=Loom.storage.get('state',null);if(s){STATE=migrate(s);return;}
+  const o=localStorage.getItem(LS)||localStorage.getItem(LSOLD)||localStorage.getItem(LSOLD2);
+  if(o){STATE=migrate(JSON.parse(o));save();}}catch(e){}}
 
 /* ============================== case model ============================== */
 function blankCase(name){return {id:uid(),name:name||'New case',created:todayISO(),start:todayISO(),
