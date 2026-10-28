@@ -1,3 +1,5 @@
+[![License: Free for personal and clinical use](https://img.shields.io/badge/license-Free%20for%20personal%20and%20clinical%20use-lightgrey)](LICENSE)
+
 
 
 <!-- shot:start -->
