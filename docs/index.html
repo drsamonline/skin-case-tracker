@@ -319,6 +319,18 @@ html.js .reveal.in{opacity:1;transform:none}
   .chart .l1,.chart .l2{stroke-dashoffset:0}
   .reveal{opacity:1;transform:none}
 }
+
+  /* ---------- light theme ----------
+     Added so the page reads on paper. It overrides the page's own variables and
+     nothing else — no markup, no layout, no type. */
+  :root, html {
+    color-scheme: light;
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --ink: #14161a;
+    --muted: #5c6470;
+    --line: #e2ddd2;
+  }
 </style>
 <script>document.documentElement.className += ' js';</script>
 </head>
