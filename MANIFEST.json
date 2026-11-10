@@ -3,16 +3,16 @@
   "locked": false,
   "files": {
     "README.md": {
-      "sha": "d7b71257d2916bdc507a76a598d90b07b81b610b",
-      "producer": "audit-2026-11-10",
+      "sha": "3e4e2fe3cf1d2f66616c05658c30ad5a777f9f9b",
+      "producer": "audit-2026-11-11",
       "class": "agent",
-      "at": "2026-11-10T13:44:17Z"
+      "at": "2026-11-10T19:20:27Z"
     },
     "docs/index.html": {
-      "sha": "d52331991558c59d139f35ce3c104d46d0f298f9",
-      "producer": "audit-2026-11-10",
+      "sha": "27e81bfd04ea2cafeb7bb83558acce23a6b9969f",
+      "producer": "audit-2026-11-11",
       "class": "agent",
-      "at": "2026-11-10T13:44:17Z"
+      "at": "2026-11-10T19:20:27Z"
     },
     "docs/play/index.html": {
       "sha": "14be739ac156c8ebdb02bd71854cc97d4b3f04f4",
@@ -25,7 +25,25 @@
       "producer": "audit-2026-11-10",
       "class": "canonical",
       "at": "2026-11-10T15:13:04Z"
+    },
+    "LICENSE": {
+      "sha": "295d4f7d26d1170a1e38f43c2cb47df84c046c86",
+      "producer": "audit-2026-11-11",
+      "class": "agent",
+      "at": "2026-11-10T19:20:27Z"
+    },
+    "docs/badges/copyright.svg": {
+      "sha": "9262db32eb234c49671b90a9a6320d1067d268d6",
+      "producer": "audit-2026-11-11",
+      "class": "agent",
+      "at": "2026-11-10T19:20:27Z"
+    },
+    "docs/badges/license.svg": {
+      "sha": "e14ff837383a566f69ee2e96f731187b15a16213",
+      "producer": "audit-2026-11-11",
+      "class": "agent",
+      "at": "2026-11-10T19:20:27Z"
     }
   },
-  "updated": "2026-11-10T15:13:04Z"
+  "updated": "2026-11-10T19:20:27Z"
 }

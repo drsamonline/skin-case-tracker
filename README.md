@@ -1,4 +1,4 @@
-[![License: Free for personal and clinical use](https://img.shields.io/badge/license-Free%20for%20personal%20and%20clinical%20use-lightgrey)](LICENSE)
+[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-blue)](LICENSE)
 
 
 
@@ -18,7 +18,7 @@ The companion app to the book <em>The Skin Is a Liar</em> by Dr. Sohil Momin. It
 <a href="https://drsamonline.github.io/skin-case-tracker/"><img src="docs/badges/live-demo.svg" alt="Landing page" onerror="this.style.display='none'"></a>
 <a href="https://drsamonline.github.io/skin-case-tracker/play/"><img src="docs/badges/pwa.svg" alt="PWA: installable and offline" onerror="this.style.display='none'"></a>
 <a href="#-privacy"><img src="docs/badges/privacy.svg" alt="Privacy: data stays on your device" onerror="this.style.display='none'"></a>
-<a href="#-licence"><img src="docs/badges/license.svg" alt="License: free to use" onerror="this.style.display='none'"></a>
+<a href="#-licence"><img src="docs/badges/license.svg" alt="Licence: PolyForm Noncommercial 1.0.0" onerror="this.style.display='none'"></a>
 <a href="https://github.com/drsamonline"><img src="docs/badges/author.svg" alt="By Dr. Sohil Momin" onerror="this.style.display='none'"></a>
 <a href="https://drsamonline.github.io/"><img src="docs/badges/all-projects.svg" alt="All projects" onerror="this.style.display='none'"></a>
 <a href="https://github.com/drsamonline/skin-case-tracker/releases/latest"><img src="docs/badges/download.svg" alt="Download" onerror="this.style.display='none'"></a>
@@ -38,7 +38,7 @@ The companion app to the book <em>The Skin Is a Liar</em> by Dr. Sohil Momin. It
 
 
 <p>
-<a href="#-licence"><img src="docs/badges/copyright.svg" alt="Copyright: all rights reserved" onerror="this.style.display='none'"></a>
+<a href="#-licence"><img src="docs/badges/copyright.svg" alt="Copyright: PolyForm Noncommercial 1.0.0" onerror="this.style.display='none'"></a>
 <img src="docs/badges/version.svg" alt="Version 7.0" onerror="this.style.display='none'">
 </p>
 
@@ -120,12 +120,17 @@ emergency, seek emergency care.
 
 ## 📜 Licence
 
-**Free to use — for personal and clinical use — but copyrighted.**
-Copyright © 2026 Dr. Sohil Momin. **All rights reserved.**
+**PolyForm Noncommercial 1.0.0.** Copyright © 2026 Dr. Sohil Momin.
 
-You may use it free of charge for personal and clinical purposes. You may **not** sell it,
-redistribute it, publish it, or modify it without written permission. See **[LICENSE](LICENSE)** for
-the full terms.
+You may use, copy, share and modify it for any **noncommercial** purpose — personal use, teaching,
+and clinical use that is not itself a commercial service — keeping the required notice. Selling it,
+or using it in a paid service, needs a commercial licence. See **[LICENSE](LICENSE)** for the full
+terms.
+
+This replaces a bespoke “free for personal and clinical use / all rights reserved” notice. Nothing
+is withdrawn: that notice permitted no redistribution at all, and this one permits it
+noncommercially. What it makes explicit is the line the old wording left open — a paid clinic is a
+commercial use.
 
 The text of the book _The Skin Is a Liar_ is **not** part of this repository and is not licensed
 here.
