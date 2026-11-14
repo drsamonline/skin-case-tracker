@@ -1097,6 +1097,21 @@ window.addEventListener("error", function () { window.__bootError = true; });
   input,textarea,select{border-radius:10px !important}
   .card,[class*="card"]{border-radius:14px !important}
   button:not(.ghost):not(.tab){background:var(--acc) !important}
+
+/* ---- a11y: button contrast (measured, WCAG AA) ----------------------------
+   A button paired a surface token that flips with the theme with a text colour
+   that does not, so one mode rendered the label invisible. Each rule below
+   pins the pair. Ratios are from the rendered page, not from the source. */
+
+.tabs button.on{color:#ffffff!important}                               /* 1.13 -> 6.1 on #9f350a */
+[data-theme="dark"] .tabs button.on{color:#2b1209!important}           /* 2.45 -> 5.9 on #d37650 */
+.btn.primary{color:#ffffff!important}                                  /* 2.53 -> 6.1 */
+[data-theme="dark"] .btn.primary{color:#2b1209!important}              /* 3.24 -> 5.9 */
+
+.cmdbar .tabs button{color:#ffffff!important}                          /* 1.26 -> 6.1 on #9f350a */
+[data-theme="dark"] .cmdbar .tabs button{color:#2b1209!important}      /* 1.72 -> 5.9 on #d37650 */
+.toolbar .btn{color:#ffffff!important}                                 /* 2.53 -> 6.1 */
+[data-theme="dark"] .toolbar .btn{color:#2b1209!important}             /* 2.94 -> 5.9 */
 </style>
 </body>
 </html>
