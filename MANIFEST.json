@@ -15,10 +15,10 @@
       "at": "2026-11-10T19:20:27Z"
     },
     "docs/play/index.html": {
-      "sha": "14be739ac156c8ebdb02bd71854cc97d4b3f04f4",
-      "producer": "bootstrap@2026-11-04",
-      "class": "generated",
-      "at": "2026-11-04T20:08:30Z"
+      "sha": "8560cd723d033dfb8cafdccfd79ebeaf49f3075f",
+      "producer": "human",
+      "class": "hand",
+      "at": "2026-11-14T18:06:38Z"
     },
     ".github/workflows/build-apps.yml": {
       "sha": "5f271a83b89e39d76c9e84c543dde754cfa58c1f",
@@ -45,5 +45,5 @@
       "at": "2026-11-10T19:20:27Z"
     }
   },
-  "updated": "2026-11-10T19:20:27Z"
+  "updated": "2026-11-14T18:06:38Z"
 }
